@@ -6,44 +6,8 @@
   <title>Puzzle!</title>
 </head>
 <body>
-  <canvas id='myCanvas' style="border:1px solid black; width:320px; height:320px;" width=320 height=320></canvas>
+  <canvas id='myCanvas' style="border:1px solid black; width:320px; height:360px;" width=320 height=360></canvas>
   <script>
-    var bgLayer = [
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-    ]
-    var midLayer = [
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    ]
     var topLayer = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -62,18 +26,78 @@
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
+    var midLayer = [
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+    var bgLayer = [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ]
     var definition = {
-      0 : 'rgba(0, 0, 0, 0)',
-      1 : 'green',
-      2 : 'black'
+      0 : 'rgba(0, 0, 0, 0)',   // air
+      1 : 'green',              // grass
+      2 : 'gray'                // wall
     }
     const canvas = document.getElementById('myCanvas');
+    const rect = canvas.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
     const sizeRowCol = 16;
     const width = 320;
     const height = 320;
-
-    
+    const boxSize = width/sizeRowCol;
+    var mousePos = {x:0, y:0};
+    var modMousePos = [mousePos.x - rect.left, mousePos.y - rect.top];
+    var gridMousePos = [-1, -1];
+    var selectedColor = 2;
+    ctx.textAlign = "center";
+    ctx.textBaseline = 'middle';
+    function getGridPos() {
+      posX = -1;
+      posY = -1;
+      for (let col = 0; col < sizeRowCol; col++) {
+        if (col*20 <= modMousePos[0] && modMousePos[0] <= (col+1)*20) {
+          posX = col+1;
+        }
+      }  
+      for (let row = 0; row < sizeRowCol; row++) {
+        if (row*20 <= modMousePos[1] && modMousePos[1] <= (row+1)*20) {
+          posY = row+1;
+        }
+      }
+      return [posX, posY]
+    }
+    function drawText(text, x, y) {
+      ctx.fillText(text, x, y);
+    }
     function drawLine(x1, y1, x2, y2, lWidth = 1) {
       ctx.lineWidth = lWidth;
       ctx.beginPath();
@@ -81,14 +105,53 @@
       ctx.lineTo(x2, y2);
       ctx.stroke();      
     }
+    function drawRect(x1, y1, x2, y2, color=null) {
+      ctx.beginPath();
+      ctx.rect(x1, y1, x2-x1, y2-y1);
+      if (color != null) {
+        var tempfill = ctx.fillStyle;
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.fillStyle = tempfill;
+      }
+      ctx.stroke()
+    }
+    function drawRectSize(x1, y1, x2, y2, color=null) {
+      ctx.beginPath();
+      ctx.rect(x1, y1, x2, y2);
+      if (color != null) {
+        var tempfill = ctx.fillStyle;
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.fillStyle = tempfill;
+      }
+      ctx.stroke()
+    }
+    function drawRectGrid(x, y, color=null) {
+      ctx.beginPath();
+      ctx.rect(x*20-20, y*20-20, 20, 20);
+      if (color != null) {
+        var tempfill = ctx.fillStyle;
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.fillStyle = tempfill;
+      }
+      ctx.stroke()
+    }
 
     function drawLayer(layer) {
       for (let row = 0; row < layer.length; row++) {
-        for (let col = 0; col < row.length; col++) {
-          ctx.beginPath();
-          ctx.rect()
+        for (let col = 0; col < layer[row].length; col++) {
+          drawRectGrid(col+1, row+1, definition[layer[row][col]]);
+          // console.log(definition[layer[row][col]]);
         }  
       }
+    }
+    
+    function loadLevel() {
+      drawLayer(bgLayer);
+      drawLayer(midLayer);
+      drawLayer(topLayer);
     }
 
     for (let size = 0; size < sizeRowCol; size++) {
@@ -97,6 +160,31 @@
       drawLine(pos, 0, pos, 320);
     }
 
+    document.addEventListener('mousemove', (event) => {
+        // console.log('Mouse position (clientX, clientY):', event.clientX, event.clientY);
+        // console.log('Mouse position (screenX, screenY):', event.screenX, event.screenY);
+        // console.log('Mouse position (pageX, pageY):', event.pageX, event.pageY);
+        mousePos.x = event.clientX;
+        mousePos.y = event.clientY;
+        modMousePos = [mousePos.x - rect.left, mousePos.y - rect.top];
+        gridMousePos = getGridPos();
+    });
+
+    drawRectSize(40, 320, 40, 40, '#ffffff');
+    drawText('pencil', 60, 340);
+    drawRectSize(80, 320, 40, 40, '#ffffff');
+    drawRectSize(120, 320, 40, 40, '#ffffff');
+    drawRectSize(120, 320, 40, 40, '#ffffff');
+
+    setInterval((evt) => {
+      drawRectSize(0, 320, 40, 20, '#ffffff')
+      drawText(modMousePos[0] + ", " + modMousePos[1], 20, 330);
+      drawRectSize(0, 340, 40, 20, '#ffffff')
+      drawText(gridMousePos[0] + ", " + gridMousePos[1], 20, 350);
+      drawRectSize(130, 330, 20, 20, definition[selectedColor]);
+    }, 10);
+    loadLevel();
+    /* Shoutout Zena Girhotra */
   </script>
 </body>
 </html>
