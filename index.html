@@ -78,11 +78,15 @@
     var modMousePos = [mousePos.x - rect.left, mousePos.y - rect.top];
     var gridMousePos = [-1, -1];
     var selectedColor = 2;
+    var selectedTool = 'pencil';
     ctx.textAlign = "center";
     ctx.textBaseline = 'middle';
     function getGridPos() {
-      posX = -1;
-      posY = -1;
+      posX = gridMousePos[0];
+      posY = gridMousePos[1];
+      if (modMousePos[0] < 0 || modMousePos[0] > 320 || modMousePos[1] < 0 || modMousePos[1] > 320) {
+        return [-1, -1]
+      }
       for (let col = 0; col < sizeRowCol; col++) {
         if (col*20 <= modMousePos[0] && modMousePos[0] <= (col+1)*20) {
           posX = col+1;
@@ -170,18 +174,56 @@
         gridMousePos = getGridPos();
     });
 
-    drawRectSize(40, 320, 40, 40, '#ffffff');
-    drawText('pencil', 60, 340);
-    drawRectSize(80, 320, 40, 40, '#ffffff');
+    document.addEventListener('mousedown', (event) => {
+      if (modMousePos[1] >= 320) {
+        if (modMousePos[0] > 40 && modMousePos[0] < 80) {
+          selectedTool = "cursor";
+        } else if (modMousePos[0] > 80 && modMousePos[0] < 120) {
+          selectedTool = "pencil";
+        } else if (modMousePos[0] > 120 && modMousePos[0] < 160) {
+          selectedTool = "dropper";
+        } //else if (modMousePos[0] > )
+      } else if (gridMousePos[0] != -1 || gridMousePos[1] != -1) {
+        switch (selectedTool) {
+          case "pencil":
+            bgLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+            break;
+          case "dropper":
+            selectedColor = bglayer[gridMousePos[1]][gridMousePos[0]];
+            break;
+          case "cursor":
+            break;
+
+          default:
+            selectedTool = "cursor";
+            break;
+        }
+      }
+    });
+
+    // Toolbar
+    drawRectSize(40, 320, 40, 40, '#ffffff'); 
+    drawText('cursor', 60, 340);
+
+    drawRectSize(80, 320, 40, 40, '#ffffff'); 
+    drawText('pencil', 100, 340);
+
     drawRectSize(120, 320, 40, 40, '#ffffff');
-    drawRectSize(120, 320, 40, 40, '#ffffff');
+    drawText('dropper', 140, 340);
+
+    
 
     setInterval((evt) => {
       drawRectSize(0, 320, 40, 20, '#ffffff')
       drawText(modMousePos[0] + ", " + modMousePos[1], 20, 330);
-      drawRectSize(0, 340, 40, 20, '#ffffff')
+      drawRectSize(0, 340, 40, 20, '#ffffff');
       drawText(gridMousePos[0] + ", " + gridMousePos[1], 20, 350);
-      drawRectSize(130, 330, 20, 20, definition[selectedColor]);
+      drawRectSize(160, 320, 40, 40, '#ffffff');
+      drawRectSize(170, 330, 20, 20, definition[selectedColor]);
+      drawRectSize(200, 320, 40, 20, '#ffffff');
+      drawText(selectedTool, 220, 330);
+      drawRectSize(200, 340, 40, 20, '#ffffff');
+      drawText(selectedColor, 220, 350);
     }, 10);
     loadLevel();
     /* Shoutout Zena Girhotra */
