@@ -6,7 +6,7 @@
   <title>Puzzle!</title>
 </head>
 <body>
-  <canvas id='myCanvas' style="border:1px solid black; width:320px; height:360px;" width=320 height=360></canvas>
+  <canvas id="myCanvas" style="border:1px solid black; width:320px; height:360px;" width=320 height=360></canvas>
   <script>
     var topLayer = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -79,8 +79,14 @@
     var gridMousePos = [-1, -1];
     var selectedColor = 2;
     var selectedTool = 'pencil';
+    var selectedLayer = 1;
     ctx.textAlign = "center";
     ctx.textBaseline = 'middle';
+    var playerObj = {
+      health : 100,
+      pos : {x:0, y:0},
+      rotation : 'south'
+    }
     function getGridPos() {
       posX = gridMousePos[0];
       posY = gridMousePos[1];
@@ -97,7 +103,7 @@
           posY = row+1;
         }
       }
-      return [posX, posY]
+      return [posX-1, posY-1]
     }
     function drawText(text, x, y) {
       ctx.fillText(text, x, y);
@@ -144,6 +150,7 @@
     }
 
     function drawLayer(layer) {
+      drawRectSize(0, 0, 320, 320, 'white');
       for (let row = 0; row < layer.length; row++) {
         for (let col = 0; col < layer[row].length; col++) {
           drawRectGrid(col+1, row+1, definition[layer[row][col]]);
@@ -156,6 +163,31 @@
       drawLayer(bgLayer);
       drawLayer(midLayer);
       drawLayer(topLayer);
+    }
+
+    function drawPlayer(player) {
+      ctx.save();
+      ctx.translate(10, 10);
+      switch (player.rotation) {
+        case 'north':
+          ctx.rotate(0 * Math.PI / 180)
+          break;
+        case 'east':
+          ctx.rotate(90 * Math.PI / 180)
+          break;
+        case 'south':
+          ctx.rotate(180 * Math.PI / 180)
+          break;
+        case 'west':
+          ctx.rotate(270 * Math.PI / 180)
+          break;
+        default:
+          console.log('Player rotated invalidly');
+          break;
+      }
+      drawRectSize(player.pos.x*20-10, player.pos.y*20-10, 20, 20, 'yellow');
+      drawText("↑", player.pos.x*20, player.pos.y*20);
+      ctx.restore();
     }
 
     for (let size = 0; size < sizeRowCol; size++) {
@@ -182,14 +214,54 @@
           selectedTool = "pencil";
         } else if (modMousePos[0] > 120 && modMousePos[0] < 160) {
           selectedTool = "dropper";
-        } //else if (modMousePos[0] > )
+        } else if (modMousePos[0] > 240 && modMousePos[0] < 280 && modMousePos[1] < 340) {
+          selectedLayer += 1;
+        } else if (modMousePos[0] > 240 && modMousePos[0] < 280 && modMousePos[1] > 340) {
+          selectedLayer -= 1;
+        }
       } else if (gridMousePos[0] != -1 || gridMousePos[1] != -1) {
         switch (selectedTool) {
           case "pencil":
-            bgLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+            switch (selectedLayer) {
+              case 1:
+                bgLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+                break;
+              case 2:
+                midLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+                break;
+              case 3:
+                topLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+                break;
+            
+              default:
+                console.log('idk what happened lil bro');
+                break;
+            }
+            loadLevel();
+            console.clear();
+            console.log('bgLayer:');
+            console.log(bgLayer);
+            console.log('midLayer:');
+            console.log(midLayer);
+            console.log('topLayer:');
+            console.log(topLayer);
             break;
           case "dropper":
-            selectedColor = bglayer[gridMousePos[1]][gridMousePos[0]];
+            switch (selectedLayer) {
+              case 1:
+                selectedColor = bgLayer[gridMousePos[1]][gridMousePos[0]];
+                break;
+              case 2:
+                selectedColor = midLayer[gridMousePos[1]][gridMousePos[0]];
+                break;
+              case 3:
+                selectedColor = topLayer[gridMousePos[1]][gridMousePos[0]];
+                break;
+            
+              default:
+                console.log('idk what happened lil bro??');
+                break;
+            }
             break;
           case "cursor":
             break;
@@ -200,7 +272,16 @@
         }
       }
     });
-
+    document.addEventListener('keydown', (event) => {
+      switch (event.key) {
+        case 'W':
+          
+          break;
+      
+        default:
+          break;
+      }
+    });
     // Toolbar
     drawRectSize(40, 320, 40, 40, '#ffffff'); 
     drawText('cursor', 60, 340);
@@ -211,7 +292,11 @@
     drawRectSize(120, 320, 40, 40, '#ffffff');
     drawText('dropper', 140, 340);
 
-    
+    drawRectSize(240, 320, 40, 20);
+    drawText("up", 260, 330);
+    drawRectSize(240, 340, 40, 20);
+    drawText("down", 260, 350);
+
 
     setInterval((evt) => {
       drawRectSize(0, 320, 40, 20, '#ffffff')
@@ -223,9 +308,25 @@
       drawRectSize(200, 320, 40, 20, '#ffffff');
       drawText(selectedTool, 220, 330);
       drawRectSize(200, 340, 40, 20, '#ffffff');
-      drawText(selectedColor, 220, 350);
+      drawText(selectedColor + " - " + selectedLayer.toString(), 220, 350);
+      switch (selectedLayer) {
+        case 1:
+          drawLayer(bgLayer);
+          break;
+        case 2:
+          drawLayer(midLayer);
+          break;
+        case 3:
+          drawLayer(topLayer);
+          break;
+      
+        default:
+          console.log('layer out of range')
+          break;
+      }
+      drawPlayer(playerObj);
     }, 10);
-    loadLevel();
+    // loadLevel();
     /* Shoutout Zena Girhotra */
   </script>
 </body>
