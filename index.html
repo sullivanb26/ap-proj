@@ -4,8 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Puzzle!</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="cursor" style="position: absolute;left:0;top:0;"><img src="pencil.png" alt="pencil"></div>
   <canvas id="myCanvas" style="border:1px solid black; width:320px; height:360px;" width=320 height=360></canvas>
   <script>
     var topLayer = [
@@ -34,7 +36,7 @@
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -65,8 +67,10 @@
     var definition = {
       0 : 'rgba(0, 0, 0, 0)',   // air
       1 : 'green',              // grass
-      2 : 'gray'                // wall
+      2 : 'gray',                // wall
+      3 : 'red'                // wall
     }
+    var collisionList = ['gray'];
     const canvas = document.getElementById('myCanvas');
     const rect = canvas.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
@@ -84,8 +88,9 @@
     ctx.textBaseline = 'middle';
     var playerObj = {
       health : 100,
-      pos : {x:0, y:0},
-      rotation : 'south'
+      pos : {x:1, y:0},
+      rotation : 'north',
+      heldItem : 'none'
     }
     function getGridPos() {
       posX = gridMousePos[0];
@@ -126,7 +131,7 @@
       }
       ctx.stroke()
     }
-    function drawRectSize(x1, y1, x2, y2, color=null) {
+    function drawRectSize(x1, y1, x2, y2, color=null) {      
       ctx.beginPath();
       ctx.rect(x1, y1, x2, y2);
       if (color != null) {
@@ -164,31 +169,83 @@
       drawLayer(midLayer);
       drawLayer(topLayer);
     }
+    function grabItem(direction) {switch (direction) {
+        case 'north':
+          if (playerObj.pos.y >= 1) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y-1][playerObj.pos.x]]);
+          }
+          return false;
+
+        case 'east':
+          if (playerObj.pos.x <= 14) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x+1]]);
+          }
+          return false;
+
+        case 'south':
+          if (playerObj.pos.y <= 14) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y+1][playerObj.pos.x]]);
+          }
+          return false;
+
+        case 'west':
+          if (playerObj.pos.x >= 1) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x-1]]);
+          }
+          return false;
+
+        default:
+          return false;
+      }
+    }
+    function canMove(direction) {
+      switch (direction) {
+        case 'north':
+          if (playerObj.pos.y >= 1) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y-1][playerObj.pos.x]]);
+          }
+          return false;
+
+        case 'east':
+          if (playerObj.pos.x <= 14) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x+1]]);
+          }
+          return false;
+
+        case 'south':
+          if (playerObj.pos.y <= 14) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y+1][playerObj.pos.x]]);
+          }
+          return false;
+
+        case 'west':
+          if (playerObj.pos.x >= 1) {
+            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x-1]]);
+          }
+          return false;
+
+        default:
+          return false;
+      }
+    }
 
     function drawPlayer(player) {
-      ctx.save();
-      ctx.translate(10, 10);
+      const px = player.pos.x * 20;
+      const py = player.pos.y * 20;
+
+      drawRectSize(px, py, 20, 20, 'yellow');
+
+      let arrow = '↑';
       switch (player.rotation) {
-        case 'north':
-          ctx.rotate(0 * Math.PI / 180)
-          break;
-        case 'east':
-          ctx.rotate(90 * Math.PI / 180)
-          break;
-        case 'south':
-          ctx.rotate(180 * Math.PI / 180)
-          break;
-        case 'west':
-          ctx.rotate(270 * Math.PI / 180)
-          break;
-        default:
-          console.log('Player rotated invalidly');
-          break;
+        case 'north': arrow = '↑'; break;
+        case 'east':  arrow = '→'; break;
+        case 'south': arrow = '↓'; break;
+        case 'west':  arrow = '←'; break;
       }
-      drawRectSize(player.pos.x*20-10, player.pos.y*20-10, 20, 20, 'yellow');
-      drawText("↑", player.pos.x*20, player.pos.y*20);
-      ctx.restore();
+
+      drawText(arrow, px + 10, py + 10); // center in 20x20 tile
     }
+
 
     for (let size = 0; size < sizeRowCol; size++) {
       pos = (size+1)*(height/(sizeRowCol+1));
@@ -204,6 +261,8 @@
         mousePos.y = event.clientY;
         modMousePos = [mousePos.x - rect.left, mousePos.y - rect.top];
         gridMousePos = getGridPos();
+        document.getElementById("cursor").style.left = mousePos.x + "px";
+        document.getElementById("cursor").style.top = mousePos.y + "px";
     });
 
     document.addEventListener('mousedown', (event) => {
@@ -273,11 +332,36 @@
       }
     });
     document.addEventListener('keydown', (event) => {
+      // console.log('key, ' + event.key + ' pressed');
       switch (event.key) {
-        case 'W':
-          
+        case 'w':
+          playerObj.rotation = 'north';
+          if (canMove('north')) {
+            // console.log('move up');
+            playerObj.pos.y -= 1;
+          }
           break;
-      
+        case 'a':
+          playerObj.rotation = 'west';
+          if (canMove('west')) {
+            // console.log('move west');
+            playerObj.pos.x -= 1;
+          }
+          break;
+        case 's':
+          playerObj.rotation = 'south';
+          if (canMove('south')) {
+            // console.log('move south');
+            playerObj.pos.y += 1;
+          }
+          break;
+        case 'd':
+          playerObj.rotation = 'east';
+          if (canMove('east')) {
+            // console.log('move east');
+            playerObj.pos.x += 1;
+          }
+          break;
         default:
           break;
       }
@@ -324,6 +408,10 @@
           console.log('layer out of range')
           break;
       }
+      drawRectSize(280, 320, 40, 20, "#ffffff");
+      drawText(playerObj.heldItem, 300, 330);
+      drawRectSize(280, 340, 40, 20, "#ffffff");
+      drawText(playerObj.heldItem, 300, 330);
       drawPlayer(playerObj);
     }, 10);
     // loadLevel();
