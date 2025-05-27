@@ -36,7 +36,7 @@
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -68,9 +68,15 @@
       0 : 'rgba(0, 0, 0, 0)',   // air
       1 : 'green',              // grass
       2 : 'gray',                // wall
-      3 : 'red'                // wall
+      3 : 'red'                // item
     }
-    var collisionList = ['gray'];
+    var nameDefinition = {
+      0 : 'air',
+      1 : 'grass',
+      2 : 'wall',
+      3 : 'item'
+    }
+    var collisionList = ['gray', 'red'];
     const canvas = document.getElementById('myCanvas');
     const rect = canvas.getBoundingClientRect();
     const ctx = canvas.getContext('2d');
@@ -83,9 +89,13 @@
     var gridMousePos = [-1, -1];
     var selectedColor = 2;
     var selectedTool = 'pencil';
-    var selectedLayer = 1;
+    var selectedLayer = 2;
     ctx.textAlign = "center";
     ctx.textBaseline = 'middle';
+    var collectables = [
+      {name:'rock', x : 4, y : 7, isPickupAble : true}
+      // ['name', x, y, isPickupAble?]
+    ]
     var playerObj = {
       health : 100,
       pos : {x:1, y:0},
@@ -169,64 +179,43 @@
       drawLayer(midLayer);
       drawLayer(topLayer);
     }
-    function grabItem(direction) {switch (direction) {
-        case 'north':
-          if (playerObj.pos.y >= 1) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y-1][playerObj.pos.x]]);
-          }
-          return false;
-
-        case 'east':
-          if (playerObj.pos.x <= 14) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x+1]]);
-          }
-          return false;
-
-        case 'south':
-          if (playerObj.pos.y <= 14) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y+1][playerObj.pos.x]]);
-          }
-          return false;
-
-        case 'west':
-          if (playerObj.pos.x >= 1) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x-1]]);
-          }
-          return false;
-
-        default:
-          return false;
-      }
-    }
-    function canMove(direction) {
+    function getGridInDir(direction) {
       switch (direction) {
         case 'north':
           if (playerObj.pos.y >= 1) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y-1][playerObj.pos.x]]);
+            return midLayer[playerObj.pos.y-1][playerObj.pos.x];
           }
-          return false;
+          return 2;
 
         case 'east':
           if (playerObj.pos.x <= 14) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x+1]]);
+            return midLayer[playerObj.pos.y][playerObj.pos.x+1];
           }
-          return false;
+          return 2;
 
         case 'south':
           if (playerObj.pos.y <= 14) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y+1][playerObj.pos.x]]);
+            return midLayer[playerObj.pos.y+1][playerObj.pos.x];
           }
-          return false;
+          return 2;
 
         case 'west':
           if (playerObj.pos.x >= 1) {
-            return !collisionList.includes(definition[midLayer[playerObj.pos.y][playerObj.pos.x-1]]);
+            return midLayer[playerObj.pos.y][playerObj.pos.x-1];
           }
-          return false;
+          return 2;
 
         default:
-          return false;
+          return 2;
       }
+    }
+    function grabItem(direction) {
+      if (!collisionList.includes(definition[getGridInDir(direction)])) {
+        console.log("item in list");
+      }
+    }
+    function canMove(direction) {
+      return !collisionList.includes(definition[getGridInDir(direction)])
     }
 
     function drawPlayer(player) {
