@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LETS GO GAMBLING</title>
+</head>
+<body>
+  <div id="money">$0</div>
+  <div id="game">
+  </div>
+  <div hidden id="slots">
+    <div style="display:flex; width:10vw; justify-content: space-around; border:1px solid black;">
+      <div>X</div>
+      <div>X</div>
+      <div>X</div>
+    </div>
+  </div>
+  <button onclick='playGame()' style="width:10vw;">GAMBLE</button>
+  <div style="width:10vw; display:flex;">
+    <button style="width:calc(10vw / 5 * 2);" onclick="document.getElementById('bet').value = parseInt(document.getElementById('bet').value)-10;">&lt;</button>
+    <input  style="width:calc(10vw / 5 * 3); text-align: center;" type="number" name="bet" id="bet" value=10>
+    <button style="width:calc(10vw / 5 * 2);" onclick="document.getElementById('bet').value = parseInt(document.getElementById('bet').value)+10;">&gt;</button>
+  </div>
+  <script>
+    var money = 0;
+    var gameSelected = 'slots';
+    var gameElem = document.getElementById('game');
+    var games = {
+      'slots' : {
+        possible : ['X', '&', '%'],
+        probs : [0.9, 0.075, 0.025],
+        values : [0.5, 2, 5]
+      }
+    }
+    function calcExpected(bet) {
+      let x = 0;
+      for (let i = 0; i < games[gameSelected].probs.length; i++) {
+        const prob = games[gameSelected].probs[i];
+        const val = games[gameSelected].values[i];
+        x += prob*(val*bet);
+      }
+      let probTot = 0;
+      games[gameSelected].probs.forEach(prob => {
+        probTot += prob;
+      });
+      // alert('Total prob of ' + probTot);
+      // alert("For a bet of " + bet + ', the expected outcome is ' + x);
+      return x;
+    }
+    switch (gameSelected) {
+      case 'slots':
+        document.getElementById('game').innerHTML = document.getElementById('slots').innerHTML;
+        break;
+    
+      default:
+        break;
+    }
+    function randomProb(outcomes, weights) {
+      if (!weights) {
+        weights = Array(outcomes.length).fill(1);
+      }
+
+      let totalWeight = weights.reduce((prev, curr) => prev + curr);
+      const num = Math.random();
+      let sum = 0;
+      let lastIndex = weights.length - 1;
+
+      for (let i = 0; i <= lastIndex; i++) {
+        sum += weights[i] / totalWeight;
+        if (num < sum) {
+          return outcomes[i];
+        }
+      }
+      return outcomes[lastIndex];
+    }
+    function playGame() {
+      switch (gameSelected) {
+        case 'slots':
+          let allowContinue = true;
+          let finalOutcome = [randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs)];
+          alert(finalOutcome);
+          setTimeout(() => {
+            allowContinue = false;
+            gameElem.children[0].children[0].innerHTML = finalOutcome[0];
+            gameElem.children[0].children[1].innerHTML = finalOutcome[1];
+            gameElem.children[0].children[2].innerHTML = finalOutcome[2];
+          }, 5000);
+          setInterval(() => {
+            if (allowContinue) {
+              gameElem.children[0].children[0].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
+              gameElem.children[0].children[1].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
+              gameElem.children[0].children[2].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
+            }  
+          }, 100);
+          
+          break;
+      
+        default:
+          break;
+      }
+    }
+    let x = calcExpected(10);
+  </script>
+</body>
+</html>
