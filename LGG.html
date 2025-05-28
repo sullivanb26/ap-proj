@@ -11,9 +11,9 @@
   </div>
   <div hidden id="slots">
     <div style="display:flex; width:10vw; justify-content: space-around; border:1px solid black;">
-      <div>X</div>
-      <div>X</div>
-      <div>X</div>
+      <div style="-webkit-text-stroke: 0.5px black;">X</div>
+      <div style="-webkit-text-stroke: 0.5px black;">X</div>
+      <div style="-webkit-text-stroke: 0.5px black;">X</div>
     </div>
   </div>
   <button onclick='playGame()' style="width:10vw;">GAMBLE</button>
@@ -75,29 +75,33 @@
       return outcomes[lastIndex];
     }
     function playGame() {
-      switch (gameSelected) {
-        case 'slots':
-          let allowContinue = true;
-          let finalOutcome = [randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs)];
-          alert(finalOutcome);
-          setTimeout(() => {
-            allowContinue = false;
-            gameElem.children[0].children[0].innerHTML = finalOutcome[0];
-            gameElem.children[0].children[1].innerHTML = finalOutcome[1];
-            gameElem.children[0].children[2].innerHTML = finalOutcome[2];
-          }, 5000);
-          setInterval(() => {
-            if (allowContinue) {
-              gameElem.children[0].children[0].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
-              gameElem.children[0].children[1].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
-              gameElem.children[0].children[2].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
-            }  
-          }, 100);
-          
-          break;
-      
-        default:
-          break;
+      if(money >= parseInt(document.getElementById("bet"))) {
+        switch (gameSelected) {
+          case 'slots':
+            let allowContinue = true;
+            let finalOutcome = [randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs)];
+            document.getElementById('money').innerHTML = finalOutcome;
+            setTimeout(() => {
+              allowContinue = false;
+              gameElem.children[0].children[0].innerHTML = finalOutcome[0];
+              gameElem.children[0].children[1].innerHTML = finalOutcome[1];
+              gameElem.children[0].children[2].innerHTML = finalOutcome[2];
+            }, 5000);
+            setInterval(() => {
+              if (allowContinue) {
+                gameElem.children[0].children[0].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
+                gameElem.children[0].children[0].style.color = 'hsl(' + Math.floor(Math.random()*360) + ', 100%, 50%)';
+                gameElem.children[0].children[1].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
+                gameElem.children[0].children[1].style.color = `hsl(${Math.floor(Math.random()*360)}, 100%, 50%)`;
+                gameElem.children[0].children[2].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
+                gameElem.children[0].children[2].style.color = `hsl(${Math.floor(Math.random()*360)}, 100%, 50%)`;
+              }  
+            }, 100); 
+            break;
+        
+          default:
+            break;
+        }
       }
     }
     let x = calcExpected(10);
