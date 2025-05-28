@@ -93,7 +93,7 @@
     ctx.textAlign = "center";
     ctx.textBaseline = 'middle';
     var collectables = [
-      {name:'rock', x : 4, y : 7, isPickupAble : true}
+      {name:'rock', pos : {x : 4, y : 7}}
       // ['name', x, y, isPickupAble?]
     ]
     var playerObj = {
@@ -179,6 +179,24 @@
       drawLayer(midLayer);
       drawLayer(topLayer);
     }
+    function getPosInDir(direction) {
+      switch (direction) {
+        case 'north':
+          return {x:playerObj.pos.x, y:playerObj.pos.y-1};
+
+        case 'east':
+          return {x:playerObj.pos.x+1, y:playerObj.pos.y};
+
+        case 'south':
+          return {x:playerObj.pos.x, y:playerObj.pos.y+1};
+
+        case 'west':
+          return {x:playerObj.pos.x-1, y:playerObj.pos.y};
+
+        default:
+          return {x:-1, y:-1};
+      }
+    }
     function getGridInDir(direction) {
       switch (direction) {
         case 'north':
@@ -210,8 +228,19 @@
       }
     }
     function grabItem(direction) {
-      if (!collisionList.includes(definition[getGridInDir(direction)])) {
-        console.log("item in list");
+      if (getGridInDir(direction) == 3) {
+        posOf = getPosInDir(direction);
+        if (!(posOf.x == -1 | posOf.y == -1)) {
+          collectables.forEach(item => {
+            if (item.pos == posOf) {
+              playerObj.heldItem = item;
+              item.pos = {x:-1, y:-1}
+              midLayer[posOf.y][posOf.x] = 0;
+            }
+          });
+          
+        } 
+        
       }
     }
     function canMove(direction) {
@@ -350,6 +379,9 @@
             // console.log('move east');
             playerObj.pos.x += 1;
           }
+          break;
+        case 'e':
+          grabItem(playerObj.rotation);
           break;
         default:
           break;
