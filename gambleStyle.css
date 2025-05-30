@@ -45,14 +45,14 @@ body {
 }
 
 #newItem {
-  width:100vw;
-  height:100vh;
-  left:0;
-  top:0;
+  width: 100vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
   position: absolute;
   align-items: center;
   justify-items: center;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 #itemModal {
@@ -67,15 +67,28 @@ body {
   border-radius: 1em;
   border: 3px solid darkslategray;
 }
+
 #itemModal>span {
   text-align: center;
 }
+
 #itemModal>div {
-  display:flex;
+  display: flex;
   justify-content: space-around;
 }
+
 .item {
   aspect-ratio: 1/1;
-  width:8em;
-  padding:0.2em 1em;
+  width: 8em;
+  padding: 0.2em 1em;
+}
+#tooltip {
+  position:absolute;
+  left:0;
+  top:0;
+  width:10em;
+  height:5em;
+  background-color: slategray;
+  border-radius: 0.2em;
+  border: 3px solid darkslategray;
 }
