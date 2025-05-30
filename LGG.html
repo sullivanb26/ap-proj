@@ -1,167 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LETS GO GAMBLING</title>
   <link rel="stylesheet" href="gambleStyle.css">
 </head>
-<!-- <body>
-  <div id="money">$0</div>
-  <div id="game">
-  </div>
-  <div hidden id="slots">
-    <div style="display:flex; width:10vw; justify-content: space-around; border:1px solid black;">
-      <div style="-webkit-text-stroke: 0.5px black;">X</div>
-      <div style="-webkit-text-stroke: 0.5px black;">X</div>
-      <div style="-webkit-text-stroke: 0.5px black;">X</div>
-    </div>
-  </div>
-  <button onclick='playGame()' style="width:10vw;">GAMBLE</button>
-  <div style="width:10vw; display:flex;">
-    <button style="width:calc(10vw / 5 * 2);" onclick="document.getElementById('bet').value = parseInt(document.getElementById('bet').value)-10;">&lt;</button>
-    <input  style="width:calc(10vw / 5 * 3); text-align: center;" type="number" name="bet" id="bet" value=10>
-    <button style="width:calc(10vw / 5 * 2);" onclick="document.getElementById('bet').value = parseInt(document.getElementById('bet').value)+10;">&gt;</button>
-  </div>
-  <script>
-    var money = 99999;
-    var gameSelected = 'slots';
-    var gameElem = document.getElementById('game');
-    var games = {
-      'slots' : {
-        possible : ['X', '&', '%'],
-        probs : [0.9, 0.075, 0.025],
-        values : [0.5, 2, 5]
-      }
-    }
-    function calcExpected(bet) {
-      let x = 0;
-      for (let i = 0; i < games[gameSelected].probs.length; i++) {
-        const prob = games[gameSelected].probs[i];
-        const val = games[gameSelected].values[i];
-        x += prob*(val*bet);
-      }
-      let probTot = 0;
-      games[gameSelected].probs.forEach(prob => {
-        probTot += prob;
-      });
-      // alert('Total prob of ' + probTot);
-      // alert("For a bet of " + bet + ', the expected outcome is ' + x);
-      return x;
-    }
-    switch (gameSelected) {
-      case 'slots':
-        document.getElementById('game').innerHTML = document.getElementById('slots').innerHTML;
-        break;
-    
-      default:
-        break;
-    }
-    function randomProb(outcomes, weights) {
-      if (!weights) {
-        weights = Array(outcomes.length).fill(1);
-      }
 
-      let totalWeight = weights.reduce((prev, curr) => prev + curr);
-      const num = Math.random();
-      let sum = 0;
-      let lastIndex = weights.length - 1;
-
-      for (let i = 0; i <= lastIndex; i++) {
-        sum += weights[i] / totalWeight;
-        if (num < sum) {
-          return outcomes[i];
-        }
-      }
-      return outcomes[lastIndex];
-    }
-    function playGame() {
-      let bet = parseInt(document.getElementById("bet").value)
-      document.getElementById("money").innerHTML = `$${money}`;
-      if(money >= bet) {
-        money -= bet;
-        document.getElementById("money").innerHTML = `$${money}`;
-        switch (gameSelected) {
-          case 'slots':
-            let allowContinue = true;
-            let finalOutcome = [randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs)];
-            let finalWin = 0;
-            finalOutcome.forEach(element => {
-              switch (element) {
-                case 'X':
-                  
-                  break;
-              
-                default:
-                  break;
-              }
-            });
-            // document.getElementById('money').innerHTML = finalOutcome;
-            setTimeout(() => {
-              allowContinue = false;
-              gameElem.children[0].children[0].innerHTML = finalOutcome[0];
-              gameElem.children[0].children[1].innerHTML = finalOutcome[1];
-              gameElem.children[0].children[2].innerHTML = finalOutcome[2];
-            }, 5000);
-            setInterval(() => {
-              if (allowContinue) {
-                gameElem.children[0].children[0].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
-                gameElem.children[0].children[0].style.color = 'hsl(' + Math.floor(Math.random()*360) + ', 100%, 50%)';
-                gameElem.children[0].children[1].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
-                gameElem.children[0].children[1].style.color = `hsl(${Math.floor(Math.random()*360)}, 100%, 50%)`;
-                gameElem.children[0].children[2].innerHTML = randomProb(games['slots'].possible, games['slots'].probs);
-                gameElem.children[0].children[2].style.color = `hsl(${Math.floor(Math.random()*360)}, 100%, 50%)`;
-              }  
-            }, 100); 
-            break;
-        
-          default:
-            break;
-        }
-      }
-    }
-    let x = calcExpected(10);
-    alert(x);
-    document.getElementById("money").innerHTML = `$${money}`;
-  </script>
-</body> -->
 <body>
   <div id="mainContent">
     <div id="game">
-      <div id="dice1" class="die">0</div>
-      <div id="dice2" class="die">0</div>
-      <div id="dice3" class="die">0</div>
-      <div id="dice4" class="die">0</div>
-      <div id="dice5" class="die">0</div>
-      <div id="dice6" class="die">0</div>
+      <div class="die">1</div>
+      <div class="die">1</div>
+      <div class="die">1</div>
+      <div class="die">1</div>
+      <div class="die">1</div>
+      <div class="die">1</div>
     </div>
     <hr>
-    <button onclick="roll()">Roll</button>
-    <div id="info">Rolled <span id="nRolls">0</span> times</div>
+    <button id="rollBtn" onclick="roll()">Roll</button>
+    <div id="info">
+      $<span id="money">0</span> (<span style="color:lawngreen">+$<span id="add">0</span></span>) <br>
+      Rolled <span id="nRolls">0</span>/<span id="mRolls">10</span> times. <br>
+      Round <span id="round">1</span>
+    </div>
   </div>
-  
+  <div id="newItem">
+    <div id="itemModal">
+      <span>Select one of the 5 modifier items.</span>
+      <div>
+        <img src="https://dummyimage.com/400x400/000/fff" class="item">
+        <img src="https://dummyimage.com/400x400/000/fff" class="item">
+        <img src="https://dummyimage.com/400x400/000/fff" class="item">
+        <img src="https://dummyimage.com/400x400/000/fff" class="item">
+        <img src="https://dummyimage.com/400x400/000/fff" class="item">
+      </div>
+    </div>
+  </div>
+
   <script>
-    let total = [0, 0, 0, 0, 0, 0];
+    const elems = {
+      roll: document.getElementById('rollBtn'),
+      nRolls: document.getElementById('nRolls'),
+      money: document.getElementById('money'),
+      round: document.getElementById('round'),
+      add: document.getElementById('add'),
+      dice: document.getElementsByClassName('die')
+    }
     let rolls = 0;
-    let rollNum = 10000000;
+    let maxRolls = 10;
+    let money = 0;
+    let round = 1;
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     }
     function roll() {
-      for (let i = 0; i < rollNum; i++) {
-        for (let num = 0; num < document.getElementsByClassName('die').length; num++) {
-          total[getRandomInt(1, 6)-1] += 1;
-          rolls += 1;
+      if (rolls < maxRolls) {
+        let tempMoney = money;
+        for (let num = 0; num < elems.dice.length; num++) {
+          const die = elems.dice[num];
+          const roll = getRandomInt(1, 6);
+          die.innerHTML = roll;
+          money += roll;
         }
+        rolls += 1;
+        elems.nRolls.innerHTML = rolls;
+        elems.money.innerHTML = money;
+        elems.add.innerHTML = money - tempMoney;
+        if (rolls == maxRolls) {
+          elems.roll.innerHTML = "New Round";
+        }
+      } else {
+        round += 1;
+        elems.round.innerHTML = round;
+        elems.roll.innerHTML = "Roll";
+        rolls = 0;
+        elems.nRolls.innerHTML = rolls;
+
       }
-      for (let n = 0; n < document.getElementsByClassName('die').length; n++) {
-        const die = document.getElementsByClassName('die')[n];
-        die.innerHTML = Math.floor(total[n]/rolls*10000)/10000;
-      }
-      document.getElementById('nRolls').innerHTML = rolls; 
     }
   </script>
 </body>
+
 </html>

@@ -1,21 +1,81 @@
+body {
+  background-color: black;
+}
+
+* {
+  font-family: "Courier New";
+}
+
 #mainContent {
   text-align: center;
-  left:50%;
-  top:50%;
-  transform:translate(-50%, -50%);
-  position:absolute;
-  overflow:none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  overflow: none;
+  background-color: slategray;
+  border: 3px solid darkslategray;
+  padding: 2em 1em 1em 1em;
+  border-radius: 1em;
 }
+
+#nRolls {
+  text-decoration: underline;
+}
+
+#info {
+  color: white;
+}
+
 #game {
-  display:flex;
+  display: flex;
   width: 50vw;
   justify-content: space-around;
   justify-self: center;
 }
+
 .die {
   aspect-ratio: 1/1;
-  width:5em;
+  width: 5em;
   text-align: center;
   line-height: 5em;
-  border:1px solid black;
+  border: 1px solid black;
+  border-radius: 0.5em;
+  background-color: white;
+}
+
+#newItem {
+  width:100vw;
+  height:100vh;
+  left:0;
+  top:0;
+  position: absolute;
+  align-items: center;
+  justify-items: center;
+  background-color: rgba(0,0,0,0.5);
+}
+
+#itemModal {
+  padding: 2.5em;
+  background-color: slategray;
+  display: flex;
+  flex-direction: column;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  border-radius: 1em;
+  border: 3px solid darkslategray;
+}
+#itemModal>span {
+  text-align: center;
+}
+#itemModal>div {
+  display:flex;
+  justify-content: space-around;
+}
+.item {
+  aspect-ratio: 1/1;
+  width:8em;
+  padding:0.2em 1em;
 }
