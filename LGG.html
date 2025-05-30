@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LETS GO GAMBLING</title>
+  <link rel="stylesheet" href="gambleStyle.css">
 </head>
-<body>
+<!-- <body>
   <div id="money">$0</div>
   <div id="game">
   </div>
@@ -23,7 +24,7 @@
     <button style="width:calc(10vw / 5 * 2);" onclick="document.getElementById('bet').value = parseInt(document.getElementById('bet').value)+10;">&gt;</button>
   </div>
   <script>
-    var money = 0;
+    var money = 99999;
     var gameSelected = 'slots';
     var gameElem = document.getElementById('game');
     var games = {
@@ -75,12 +76,27 @@
       return outcomes[lastIndex];
     }
     function playGame() {
-      if(money >= parseInt(document.getElementById("bet"))) {
+      let bet = parseInt(document.getElementById("bet").value)
+      document.getElementById("money").innerHTML = `$${money}`;
+      if(money >= bet) {
+        money -= bet;
+        document.getElementById("money").innerHTML = `$${money}`;
         switch (gameSelected) {
           case 'slots':
             let allowContinue = true;
             let finalOutcome = [randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs), randomProb(games['slots'].possible, games['slots'].probs)];
-            document.getElementById('money').innerHTML = finalOutcome;
+            let finalWin = 0;
+            finalOutcome.forEach(element => {
+              switch (element) {
+                case 'X':
+                  
+                  break;
+              
+                default:
+                  break;
+              }
+            });
+            // document.getElementById('money').innerHTML = finalOutcome;
             setTimeout(() => {
               allowContinue = false;
               gameElem.children[0].children[0].innerHTML = finalOutcome[0];
@@ -105,6 +121,47 @@
       }
     }
     let x = calcExpected(10);
+    alert(x);
+    document.getElementById("money").innerHTML = `$${money}`;
+  </script>
+</body> -->
+<body>
+  <div id="mainContent">
+    <div id="game">
+      <div id="dice1" class="die">0</div>
+      <div id="dice2" class="die">0</div>
+      <div id="dice3" class="die">0</div>
+      <div id="dice4" class="die">0</div>
+      <div id="dice5" class="die">0</div>
+      <div id="dice6" class="die">0</div>
+    </div>
+    <hr>
+    <button onclick="roll()">Roll</button>
+    <div id="info">Rolled <span id="nRolls">0</span> times</div>
+  </div>
+  
+  <script>
+    let total = [0, 0, 0, 0, 0, 0];
+    let rolls = 0;
+    let rollNum = 10000000;
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function roll() {
+      for (let i = 0; i < rollNum; i++) {
+        for (let num = 0; num < document.getElementsByClassName('die').length; num++) {
+          total[getRandomInt(1, 6)-1] += 1;
+          rolls += 1;
+        }
+      }
+      for (let n = 0; n < document.getElementsByClassName('die').length; n++) {
+        const die = document.getElementsByClassName('die')[n];
+        die.innerHTML = Math.floor(total[n]/rolls*10000)/10000;
+      }
+      document.getElementById('nRolls').innerHTML = rolls; 
+    }
   </script>
 </body>
 </html>
