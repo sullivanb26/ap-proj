@@ -1,5 +1,6 @@
 body {
   background-color: black;
+  overflow: hidden;
 }
 
 * {
@@ -76,6 +77,12 @@ body {
   display: flex;
   justify-content: space-around;
 }
+#itemModal>div>div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
 .item {
   aspect-ratio: 1/1;
@@ -84,11 +91,13 @@ body {
 }
 #tooltip {
   position:absolute;
-  left:0;
-  top:0;
+  left: 0;
+  top: 0;
   width:10em;
   height:5em;
   background-color: slategray;
   border-radius: 0.2em;
   border: 3px solid darkslategray;
+  pointer-events: none;
+  visibility: hidden;
 }

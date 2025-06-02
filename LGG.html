@@ -1,45 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LETS GO GAMBLING</title>
+    <link rel="stylesheet" href="gambleStyle.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LETS GO GAMBLING</title>
-  <link rel="stylesheet" href="gambleStyle.css">
-</head>
-
-<body>
-  <div id="mainContent">
-    <div id="game">
-      <div class="die">1</div>
-      <div class="die">1</div>
-      <div class="die">1</div>
-      <div class="die">1</div>
-      <div class="die">1</div>
-      <div class="die">1</div>
-    </div>
-    <hr>
-    <button id="rollBtn" onclick="roll()">Roll</button>
-    <div id="info">
-      $<span id="money">0</span> (<span style="color:lawngreen">+$<span id="add">0</span></span>) <br>
-      Rolled <span id="nRolls">0</span>/<span id="mRolls">10</span> times. <br>
-      Round <span id="round">1</span>
-    </div>
-  </div>
-  <div id="newItem">
-    <div id="itemModal">
-      <span>Select one of the 5 modifier items.</span>
-      <div>
-        <img src="https://dummyimage.com/400x400/000/fff" itemType="bonus" class="item">
-        <img src="https://dummyimage.com/400x400/000/fff" itemType="bonus" class="item">
-        <img src="https://dummyimage.com/400x400/000/fff" itemType="bonus" class="item">
-        <img src="https://dummyimage.com/400x400/000/fff" itemType="bonus" class="item">
-        <img src="https://dummyimage.com/400x400/000/fff" itemType="bonus" class="item">
+  <body>
+    <div id="mainContent">
+      <div id="game">
+        <div class="die">1</div>
+        <div class="die">1</div>
+        <div class="die">1</div>
+        <div class="die">1</div>
+        <div class="die">1</div>
+        <div class="die">1</div>
+      </div>
+      <hr />
+      <button id="rollBtn" onclick="roll()">Roll</button>
+      <div id="info">
+        $<span id="money">0</span> (<span style="color: lawngreen"
+          >+$<span id="add">0</span></span
+        >) <br />
+        Rolled <span id="nRolls">0</span>/<span id="mRolls">10</span> times.
+        <br />
+        Round <span id="round">1</span>
       </div>
     </div>
-  </div>
-  <div id="tooltip"><span>Title</span><hr><span>descr</span></div>
-  <script src="gambleScript.js"></script>
-</body>
-
+    <div id="newItem">
+      <div id="itemModal">
+        <span>Select one of the 5 modifier items.</span>
+        <div>
+          <div>
+            <img
+              src="https://dummyimage.com/400x400/000/fff"
+              type="Bonus"
+              class="item"
+            />
+            <span>
+              name - <span style="color: lawngreen">$5</span>
+            </span>
+          </div>
+          <div>
+            <img
+              src="https://dummyimage.com/400x400/000/fff"
+              type="Bonus"
+              class="item"
+            />
+            <span>
+              name - <span style="color: lawngreen">$5</span>
+            </span>
+          </div>
+          <div>
+            <img
+              src="https://dummyimage.com/400x400/000/fff"
+              type="Bonus"
+              class="item"
+            />
+            <span>
+              name - <span style="color: lawngreen">$5</span>
+            </span>
+          </div>
+          <div>
+            <img
+              src="https://dummyimage.com/400x400/000/fff"
+              type="Bonus"
+              class="item"
+            />
+            <span>
+              name - <span style="color: lawngreen">$5</span>
+            </span>
+          </div>
+          <div>
+            <img
+              src="https://dummyimage.com/400x400/000/fff"
+              type="Bonus"
+              class="item"
+            />
+            <span>
+              name - <span style="color: lawngreen">$5</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tooltip">
+      <span>Title</span>
+      <hr />
+      <span>descr</span>
+    </div>
+    <script src="gambleScript.js"></script>
+  </body>
 </html>
