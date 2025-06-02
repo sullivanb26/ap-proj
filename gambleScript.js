@@ -22,6 +22,7 @@ try {
       desc: "Gives $50 bonus on next roll",
     },
   };
+
   const weights = [
     15, // Bonus
     5,  // Multiplier
@@ -30,26 +31,32 @@ try {
     4,  // LuckyDie
     2,  // CashJackpot
   ];
+
   const elems = {
     roll: document.getElementById("rollBtn"),
     nRolls: document.getElementById("nRolls"),
+    mRolls: document.getElementById("mRolls"),
     money: document.getElementById("money"),
     round: document.getElementById("round"),
     add: document.getElementById("add"),
     dice: document.getElementsByClassName("die"),
     tooltip: document.getElementById("tooltip"),
   };
+
   let playerInv = [];
   let rolls = 0;
   let maxRolls = 10;
   let money = 0;
   let round = 1;
+
   console.log(Object.keys(items));
+
   function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+
   function randProb(items, weights) {
     if (items.length !== weights.length) {
       throw new Error("Items and weights arrays must have the same length.");
@@ -71,6 +78,7 @@ try {
     }
     return null;
   }
+
   function count(list, item) {
     let count = 0;
     for (let i = 0; i < list.length; i++) {
@@ -81,6 +89,7 @@ try {
     }
     return count;
   }
+
   function roll() {
     if (rolls < maxRolls) {
       let earnMoney = 0;
@@ -91,9 +100,20 @@ try {
         earnMoney += roll;
       }
       rolls += 1;
-      //Items Traits
-      earnMoney += count(playerInv, "Bonus") * 10; //Bonus
-      earnMoney = (count(playerInv, "Multiplier") * 0.1 + 1) * earnMoney; //Multiplier
+
+      // Items Traits
+      earnMoney += count(playerInv, "Bonus") * 10; // Bonus
+      earnMoney = (count(playerInv, "Multiplier") * 0.1 + 1) * earnMoney; // Multiplier
+      if (count(playerInv, "MoneyMultiplier") > 0) {
+        earnMoney *= 1.5; // Money Multiplier
+      }
+      if (count(playerInv, "LuckyDie") > 0) {
+        earnMoney += getRandomInt(6, 12); // Lucky Die
+      }
+      if (count(playerInv, "CashJackpot") > 0) {
+        earnMoney += 50; // Cash Jackpot
+        playerInv = playerInv.filter(item => item !== "CashJackpot"); // One-time use
+      }
 
       earnMoney = Math.floor(earnMoney * 100) / 100;
       money += earnMoney;
@@ -101,6 +121,7 @@ try {
       elems.nRolls.innerHTML = rolls;
       elems.money.innerHTML = money;
       elems.add.innerHTML = earnMoney;
+
       if (rolls == maxRolls) {
         elems.roll.innerHTML = "New Round";
       }
@@ -113,15 +134,25 @@ try {
       newItem();
     }
   }
+
   function tooltip(type, evt) {
     elems.tooltip.style.visibility = "visible";
     elems.tooltip.innerHTML = `<span>${type}</span><hr><span>${items[type].desc}</span>`;
     elems.tooltip.style.left = `${evt.clientX}px`;
     elems.tooltip.style.top = `${evt.clientY}px`;
   }
+
+  function skipItem() {
+    money -= Math.floor(money*0.5);
+    document.getElementById("newItem").style.visibility = "hidden";
+  }
+
   function newItem() {
-    let cost = Math.pow(5, playerInv.length)-1;
+    // Gradual cost increase based on items already owned
+    let cost = Math.floor(15 + Math.log(playerInv.length + 1) * 10);
     document.getElementById("newItem").style.visibility = "visible";
+    document.getElementById("skipCost").innerHTML = `Skip $${money/2}`;
+    
     for (let i = 0; i < document.getElementsByClassName("item").length; i++) {
       const element = document.getElementsByClassName("item")[i];
       let newType = randProb(Object.keys(items), weights);
@@ -131,6 +162,7 @@ try {
       element.parentElement.children[1].innerHTML = `${newType} - <span style="color: lawngreen">$${cost}</span>`;
     }
   }
+
   function giveItem(type, cost) {
     if (money >= cost) {
       money -= cost;
@@ -138,7 +170,10 @@ try {
       playerInv.push(type);
       console.log(playerInv);
     }
+    maxRolls = count(playerInv, "DoubleRoll") + 10;
+    elems.mRolls.innerHTML = maxRolls;
   }
+
   for (let i = 0; i < document.getElementsByClassName("item").length; i++) {
     const elem = document.getElementsByClassName("item")[i];
     elem.onmousemove = function (event) {
@@ -151,6 +186,7 @@ try {
       giveItem(this.getAttribute("type"), this.getAttribute("cost"));
     };
   }
+
   newItem();
 } catch (error) {
   alert(error);

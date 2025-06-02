@@ -67,6 +67,11 @@ body {
   position: absolute;
   border-radius: 1em;
   border: 3px solid darkslategray;
+  align-items: center;
+}
+#skipCost {
+  color:lawngreen;
+  background-color: gray;
 }
 
 #itemModal>span {
