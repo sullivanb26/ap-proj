@@ -17,6 +17,9 @@
       height="360"
     ></canvas>
     <script>
+      function log(text) {
+        console.log(text);
+      }
       var topLayer = [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,7 +46,7 @@
         [0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
         [0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
         [0, 0, 2, 0, 0, 2, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
         [0, 0, 2, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0],
         [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -76,14 +79,19 @@
         1: "green", // grass
         2: "gray", // wall
         3: "red", // item
+        4: "purple", // door locked
+        5: "pink" // door unlocked
       };
       var nameDefinition = {
+        99: "oob", // outofbounds
         0: "air",
         1: "grass",
         2: "wall",
         3: "item",
+        4: "door",
+        5: "undoor",
       };
-      var collisionList = ["gray", "red"];
+      var collisionList = ["wall", "item", "door", "oob"];
       const canvas = document.getElementById("myCanvas");
       const rect = canvas.getBoundingClientRect();
       const ctx = canvas.getContext("2d");
@@ -100,12 +108,12 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       var collectables = [
-        { name: "rock", pos: { x: 7, y: 6 } },
+        { name: "key", pos: { x: 7, y: 6 } },
         // ['name', x, y, isPickupAble?]
       ];
       var playerObj = {
         health: 100,
-        pos: { x: 1, y: 0 },
+        pos: { x: 11, y: 6 },
         rotation: "north",
         heldItem: null,
       };
@@ -177,7 +185,6 @@
       }
 
       function drawLayer(layer) {
-        drawRectSize(0, 0, 320, 320, "white");
         for (let row = 0; row < layer.length; row++) {
           for (let col = 0; col < layer[row].length; col++) {
             drawRectGrid(col + 1, row + 1, definition[layer[row][col]]);
@@ -187,6 +194,7 @@
       }
 
       function loadLevel() {
+        drawRectSize(0, 0, 320, 320, "white");
         drawLayer(bgLayer);
         drawLayer(midLayer);
         drawLayer(topLayer);
@@ -219,7 +227,7 @@
         ) {
           return midLayer[pos.y][pos.x];
         }
-        return 0;
+        return 99;
       }
       function grabItem(direction) {
         if (getGridInDir(direction) == 3) {
@@ -230,6 +238,7 @@
                 playerObj.heldItem = item;
                 item.pos = { x: -1, y: -1 };
                 midLayer[posOf.y][posOf.x] = 0;
+                collectables.pop(item);
               }
             });
           }
@@ -237,18 +246,21 @@
       }
 
       function dropItem() {
+        log(collectables);
         if (playerObj.heldItem) {
-          let pos = playerObj.pos;
-          collectables.push({
-            name: playerObj.heldItem.name,
-            pos: { x: pos.x, y: pos.y },
-          });
-          playerObj.heldItem = null;
-          midLayer[pos.y][pos.x] = 3;
+          let pos = getPosInDir(playerObj.rotation);
+          if (midLayer[pos.y][pos.x] == 0) {
+            collectables.push({
+              name: playerObj.heldItem.name,
+              pos: { x: pos.x, y: pos.y },
+            });
+            playerObj.heldItem = null;
+            midLayer[pos.y][pos.x] = 3;
+          }
         }
       }
       function canMove(direction) {
-        return !collisionList.includes(definition[getGridInDir(direction)]);
+        return !collisionList.includes(nameDefinition[getGridInDir(direction)]);
       }
 
       function drawPlayer(player) {
@@ -311,7 +323,8 @@
           } else if (
             modMousePos[0] > 240 &&
             modMousePos[0] < 280 &&
-            modMousePos[1] > 340
+            modMousePos[1] > 340 &&
+            modMousePos[1] < 360
           ) {
             selectedLayer -= 1;
           }
@@ -400,7 +413,14 @@
             }
             break;
           case "e":
-            grabItem(playerObj.rotation);
+            if (playerObj.heldItem == null) {
+              grabItem(playerObj.rotation);  
+            } else if (getGridInDir(playerObj.rotation) == 4 && playerObj.heldItem.name == 'key') {
+              playerObj.heldItem = null;
+              let pos = getPosInDir(playerObj.rotation);
+              midLayer[pos.y][pos.x] = 5;
+            }
+            
             break;
           case "q":
             dropItem();
@@ -435,25 +455,30 @@
         drawText(selectedTool, 220, 330);
         drawRectSize(200, 340, 40, 20, "#ffffff");
         drawText(selectedColor + " - " + selectedLayer.toString(), 220, 350);
-        switch (selectedLayer) {
-          case 1:
-            drawLayer(bgLayer);
-            break;
-          case 2:
-            drawLayer(midLayer);
-            break;
-          case 3:
-            drawLayer(topLayer);
-            break;
+        // switch (selectedLayer) {
+        //   case 1:
+        //     drawLayer(bgLayer);
+        //     break;
+        //   case 2:
+        //     drawLayer(midLayer);
+        //     break;
+        //   case 3:
+        //     drawLayer(topLayer);
+        //     break;
 
-          default:
-            console.log("layer out of range");
-            break;
-        }
+        //   default:
+        //     console.log("layer out of range");
+        //     break;
+        // }
+        loadLevel();
         drawRectSize(280, 320, 40, 20, "#ffffff");
-        drawText(playerObj.heldItem, 300, 330);
+        if (playerObj.heldItem != null) {
+          drawText(playerObj.heldItem.name, 300, 330);
+        } else {
+          drawText("None", 300, 330);
+        }
         drawRectSize(280, 340, 40, 20, "#ffffff");
-        drawText(playerObj.heldItem, 300, 330);
+        // drawText(playerObj.heldItem, 300, 350);
         drawPlayer(playerObj);
       }, 10);
       // loadLevel();
