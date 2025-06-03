@@ -1,20 +1,23 @@
 try {
   const items = {
-    Bonus: { src: "bonus.png", desc: "Additional $10 per roll" },
+    Bonus: {
+      src: "bonus.png", 
+      desc: "Additional $10 per roll" 
+    },
     Multiplier: {
-      src: "bonus.png",
+      src: "mult.png",
       desc: "Multiplies outcome by extra 0.1 per item",
     },
     DoubleRoll: {
-      src: "bonus.png",
+      src: "double.png",
       desc: "Gives an extra roll each turn",
     },
     LuckyDie: {
-      src: "bonus.png",
+      src: "lucky.png",
       desc: "Randomly rolls a number between 6 and 12",
     },
     CashJackpot: {
-      src: "bonus.png",
+      src: "jackpot.png",
       desc: "Gives $50 bonus on next roll",
     },
   };
@@ -23,7 +26,6 @@ try {
     15, // Bonus
     5,  // Multiplier
     4,  // DoubleRoll
-    3,  // MoneyMultiplier
     4,  // LuckyDie
     2,  // CashJackpot
   ];
