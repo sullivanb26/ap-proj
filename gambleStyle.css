@@ -1,47 +1,159 @@
+:root {
+  --bgColor: hsl(115, 26%, 45%);
+  --primColor: hsl(0, 0%, 10%);
+  --secColor: hsl(0, 0%, 30%);
+  --terColor: hsl(0, 0%, 50%);
+  --dropColor: hsl(0, 0%, 25%);
+}
+
 body {
   background-color: black;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 * {
-  font-family: "Courier New";
+  font-family: Soda;
 }
 
 #mainContent {
-  text-align: center;
-  left: 50%;
+  /* text-align: center; */
+  /* left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); */
   position: absolute;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
   overflow: none;
-  background-color: slategray;
-  border: 3px solid darkslategray;
-  padding: 2em 1em 1em 1em;
-  border-radius: 1em;
+  background-color: var(--bgColor);
+  /* border: 3px solid darkslategray;  */
+  /* padding: 2rem 1rem 1rem 1rem; */
+  /* border-radius: 1rem; */
+  display: grid;
+  grid-template-columns: calc(100vw / 7 * 2) calc(100vw / 7 * 5);
 }
 
-#nRolls {
-  text-decoration: underline;
+#sidebar {
+  background-color: var(--primColor);
+  /* width: 100%; */
+  width: calc(100vw / 7 * 2 - 1rem);
+  /* outline: 1px solid red; */
+  overflow: hidden;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 #info {
   color: white;
+  /* border-bottom: 1px solid white; */
 }
 
-#game {
+.iCont {
+  /* outline:1px solid darkslategrey; */
+  background-color: var(--secColor);
+  width: calc(100% - 1rem);
+  height: 3rem;
+  border-radius: 0.25rem;
+  align-self: center;
+  padding: 0.5rem;
+  filter: drop-shadow(0 0.25rem var(--dropColor));
+  margin: 0 0 0.5rem 0;
   display: flex;
-  width: 50vw;
-  justify-content: space-around;
-  justify-self: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: center;
 }
+
+.soda {
+  font-family: Soda;
+}
+.VCR {
+  font-family: VCR;
+}
+
+.largeInfo {
+  width: 100%;
+  line-height: 150%;
+  display: flex;
+  font-size:xx-large;
+}
+
+.subNum {
+  width: 100%;
+  text-align: center;
+  align-content: center;
+  font-size: 2rem;
+  font-family: Soda;
+}
+
+.mleft {
+  margin: 0 0 0 1rem;
+}
+.mboth {
+  margin: 0 1rem 0 1rem;
+}
+
+.bgSub {
+  /* margin: 0 1rem; */
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  overflow: hidden;
+  background-color: var(--terColor);
+  border-radius: 0.2rem;
+}
+
+#invContainer {
+  overflow: hidden;
+  text-align: center;
+  max-height: 100%;
+  height: 100%;
+}
+
+#inventory {
+  display: grid;
+  justify-content: space-evenly;
+  align-self: center;
+  /* outline: 1px solid blue; */
+  grid-template-columns: repeat(auto-fill, 3.2rem);
+  gap: 0.2rem;
+  overflow-y: scroll;
+  /* height: calc(100% - 1.6rem); */
+  max-height: calc(100% - 1.6rem);
+}
+
+#inventory>* {
+  margin: 0.1rem;
+  width: 3rem;
+  aspect-ratio: 1/1;
+}
+
+
+
+#game {
+  width: 100%;
+  /* background-color: blue; */
+  overflow: hidden;
+  width: calc(100vw / 7 * 5);
+}
+
+.dice {
+  display: flex;
+}
+
+
 
 .die {
   aspect-ratio: 1/1;
-  width: 5em;
+  width: 5rem;
   text-align: center;
-  line-height: 5em;
+  line-height: 5rem;
   border: 1px solid black;
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
   background-color: white;
 }
 
@@ -57,7 +169,7 @@ body {
 }
 
 #itemModal {
-  padding: 2.5em;
+  padding: 2.5rem;
   background-color: slategray;
   display: flex;
   flex-direction: column;
@@ -65,12 +177,13 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
-  border-radius: 1em;
+  border-radius: 1rem;
   border: 3px solid darkslategray;
   align-items: center;
 }
+
 #skipCost {
-  color:lawngreen;
+  color: lawngreen;
   background-color: gray;
 }
 
@@ -82,6 +195,7 @@ body {
   display: flex;
   justify-content: space-around;
 }
+
 #itemModal>div>div {
   display: flex;
   flex-direction: column;
@@ -91,18 +205,29 @@ body {
 
 .item {
   aspect-ratio: 1/1;
-  width: 8em;
-  padding: 0.2em 1em;
+  width: 8rem;
+  padding: 0.2rem 1rem;
 }
+
 #tooltip {
-  position:absolute;
+  position: absolute;
   left: 0;
   top: 0;
-  width:10em;
-  height:5em;
+  width: 10rem;
+  height: 5rem;
   background-color: slategray;
-  border-radius: 0.2em;
+  border-radius: 0.2rem;
   border: 3px solid darkslategray;
   pointer-events: none;
   visibility: hidden;
+}
+
+@font-face {
+  font-family: Soda;
+  src: url(GrapeSoda.ttf);
+}
+
+@font-face {
+  font-family: VCR;
+  src: url(VCR.ttf);
 }

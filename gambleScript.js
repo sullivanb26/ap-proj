@@ -2,23 +2,19 @@ try {
   const items = {
     Bonus: { src: "bonus.png", desc: "Additional $10 per roll" },
     Multiplier: {
-      src: "mult.png",
+      src: "bonus.png",
       desc: "Multiplies outcome by extra 0.1 per item",
     },
     DoubleRoll: {
-      src: "double_roll.png",
+      src: "bonus.png",
       desc: "Gives an extra roll each turn",
     },
-    MoneyMultiplier: {
-      src: "money_mult.png",
-      desc: "Multiplies money earned by 1.5",
-    },
     LuckyDie: {
-      src: "lucky_die.png",
+      src: "bonus.png",
       desc: "Randomly rolls a number between 6 and 12",
     },
     CashJackpot: {
-      src: "cash_jackpot.png",
+      src: "bonus.png",
       desc: "Gives $50 bonus on next roll",
     },
   };
@@ -119,8 +115,8 @@ try {
       money += earnMoney;
       money = Math.floor(money * 100) / 100;
       elems.nRolls.innerHTML = rolls;
-      elems.money.innerHTML = money;
-      elems.add.innerHTML = earnMoney;
+      elems.money.innerHTML = `$${money}`;
+      elems.add.innerHTML = `+$${earnMoney}`;
 
       if (rolls == maxRolls) {
         elems.roll.innerHTML = "New Round";
@@ -166,9 +162,11 @@ try {
   function giveItem(type, cost) {
     if (money >= cost) {
       money -= cost;
+      elems.money.innerHTML = `$${money}`;
       document.getElementById("newItem").style.visibility = "hidden";
       playerInv.push(type);
       console.log(playerInv);
+      document.getElementById('inventory').innerHTML += `<img src="${items[type].src}" alt="${type}" type=${type}>`;
     }
     maxRolls = count(playerInv, "DoubleRoll") + 10;
     elems.mRolls.innerHTML = maxRolls;
@@ -187,7 +185,7 @@ try {
     };
   }
 
-  newItem();
+  // newItem();
 } catch (error) {
   alert(error);
 }

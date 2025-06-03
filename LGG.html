@@ -1,15 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LETS GO GAMBLING</title>
-    <link rel="stylesheet" href="gambleStyle.css" />
-  </head>
 
-  <body>
-    <div id="mainContent">
-      <div id="game">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LETS GO GAMBLING</title>
+  <link rel="stylesheet" href="gambleStyle.css" />
+</head>
+
+<body>
+  <div id="mainContent">
+    <div id="sidebar">
+      <div id="info">
+        <div class="iCont">
+          <div class="soda largeInfo">ROUND<div class="subNum bgSub mleft" id="round">1</div></div>
+        </div>
+        <div class="iCont">
+          <div class="soda bgSub subNum" id="money" style="color: goldenrod">$1234567890</div>
+          <div class="soda bgSub subNum" id="add" style="color: lawngreen">+$0</div>
+        </div>
+        <div class="iCont">
+          <div class="soda largeInfo">ROLLED<div class="subNum bgSub mboth"><span id="nRolls">0</span>/<span id="mRolls">10</span></div>TIMES</div>
+        </div>
+      </div>
+      <hr style="width: 100%;">
+      <div style="color: white" id="invContainer">
+        <span class="VCR" style="font-weight: bolder; line-height: 1em;">Inventory:</span>
+        <div id="inventory">
+          <!-- img[src='https://dummyimage.com/100x100/000/fff' alt='test']*50 -->
+        </div>
+      </div>
+    </div>
+    <div id="game">
+      <div class="dice">
         <div class="die">1</div>
         <div class="die">1</div>
         <div class="die">1</div>
@@ -19,78 +42,53 @@
       </div>
       <hr />
       <button id="rollBtn" onclick="roll()">Roll</button>
-      <div id="info">
-        $<span id="money">0</span> (<span style="color: lawngreen"
-          >+$<span id="add">0</span></span
-        >) <br />
-        Rolled <span id="nRolls">0</span>/<span id="mRolls">10</span> times.
-        <br />
-        Round <span id="round">1</span>
-      </div>
     </div>
-    <div id="newItem">
-      <div id="itemModal">
-        <span>Select one of the 5 modifier items.</span>
+
+  </div>
+  <div id="newItem" style="visibility: hidden;">
+    <div id="itemModal">
+      <span>Select one of the 5 modifier items.</span>
+      <div>
         <div>
-          <div>
-            <img
-              src="https://dummyimage.com/400x400/000/fff"
-              type="Bonus"
-              class="item"
-            />
-            <span>
-              name - <span style="color: lawngreen">$5</span>
-            </span>
-          </div>
-          <div>
-            <img
-              src="https://dummyimage.com/400x400/000/fff"
-              type="Bonus"
-              class="item"
-            />
-            <span>
-              name - <span style="color: lawngreen">$5</span>
-            </span>
-          </div>
-          <div>
-            <img
-              src="https://dummyimage.com/400x400/000/fff"
-              type="Bonus"
-              class="item"
-            />
-            <span>
-              name - <span style="color: lawngreen">$5</span>
-            </span>
-          </div>
-          <div>
-            <img
-              src="https://dummyimage.com/400x400/000/fff"
-              type="Bonus"
-              class="item"
-            />
-            <span>
-              name - <span style="color: lawngreen">$5</span>
-            </span>
-          </div>
-          <div>
-            <img
-              src="https://dummyimage.com/400x400/000/fff"
-              type="Bonus"
-              class="item"
-            />
-            <span>
-              name - <span style="color: lawngreen">$5</span>
-            </span>
-          </div>
+          <img src="https://dummyimage.com/400x400/000/fff" type="Bonus" class="item" />
+          <span>
+            name - <span style="color: lawngreen">$5</span>
+          </span>
         </div>
-        <button onclick="skipItem()" style="width: min-content;" id="skipCost">Skip $5</button>
+        <div>
+          <img src="https://dummyimage.com/400x400/000/fff" type="Bonus" class="item" />
+          <span>
+            name - <span style="color: lawngreen">$5</span>
+          </span>
+        </div>
+        <div>
+          <img src="https://dummyimage.com/400x400/000/fff" type="Bonus" class="item" />
+          <span>
+            name - <span style="color: lawngreen">$5</span>
+          </span>
+        </div>
+        <div>
+          <img src="https://dummyimage.com/400x400/000/fff" type="Bonus" class="item" />
+          <span>
+            name - <span style="color: lawngreen">$5</span>
+          </span>
+        </div>
+        <div>
+          <img src="https://dummyimage.com/400x400/000/fff" type="Bonus" class="item" />
+          <span>
+            name - <span style="color: lawngreen">$5</span>
+          </span>
+        </div>
       </div>
+      <button onclick="skipItem()" style="width: min-content;" id="skipCost">Skip $5</button>
     </div>
-    <div id="tooltip">
-      <span>Title</span>
-      <hr />
-      <span>descr</span>
-    </div>
-    <script src="gambleScript.js"></script>
-  </body>
+  </div>
+  <div id="tooltip">
+    <span>Title</span>
+    <hr />
+    <span>descr</span>
+  </div>
+  <script src="gambleScript.js"></script>
+</body>
+
 </html>
