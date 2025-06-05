@@ -1,33 +1,84 @@
 try {
   const items = {
+    PiggyBank: {
+      src: "piggyBank.png", 
+      desc: "Additional $5 per roll",
+      rarity: "Common"
+    },
     Bonus: {
       src: "bonus.png", 
-      desc: "Additional $10 per roll" 
+      desc: "Additional $10 per roll",
+      rarity: "Common"
     },
     Multiplier: {
       src: "mult.png",
       desc: "Multiplies outcome by extra 0.1 per item",
+      rarity: "Rare"
     },
     DoubleRoll: {
       src: "double.png",
       desc: "Gives an extra roll each turn",
+      rarity: "Rare"
     },
     LuckyDie: {
       src: "lucky.png",
       desc: "Randomly rolls a number between 6 and 12",
+      rarity: "Epic"
     },
     CashJackpot: {
       src: "jackpot.png",
       desc: "Gives $50 bonus on next roll",
+      rarity: "Epic"
     },
+    GoldRush: {
+      src: "goldrush.png",
+      desc: "Doubles total earnings once every 3 rounds",
+      rarity: "Legendary"
+    },
+    DebtDoubler: { // DO A SCALE
+      src: "debt.png",
+      desc: "Increases the goal increase rate (hard mode) at a significant increase to wealth",
+      rarity: "Legendary"
+    },
+
+    // NEGATIVES
+
+    TaxAudit: {
+      src: "taxAudit.png",
+      desc: "Takes 20% of your money every round.",
+      rarity: "Rare"
+    },
+    BadLuckDie: {
+      src: "badLuckDie.png",
+      desc: "Subtracts a random number between 1 and 3 from your earnings each roll.",
+      rarity: "Rare"
+    },
+    LoanShark: {
+      src: "loanshark.png",
+      desc: "The loan shark demands his due. Half of every earning is taken.",
+      rarity: "Rare"
+    },
+    Inflation: {
+      src: "inflation.png",
+      desc: "Everything’s getting more expensive. All new item costs increase by 50%.",
+      rarity: "epic"
+    },
+
   };
 
   const weights = [
+    15, // Piggybank
     15, // Bonus
     5,  // Multiplier
     4,  // DoubleRoll
     4,  // LuckyDie
     2,  // CashJackpot
+    1,  // GoldRush
+    1,  // DebtDoubler
+    1,  // TaxAudit
+    1,  // BadLuckDie
+    1,  // LoanShark
+    1,  // Inflation
   ];
 
   const elems = {
@@ -39,6 +90,7 @@ try {
     add: document.getElementById("add"),
     dice: document.getElementsByClassName("die"),
     tooltip: document.getElementById("tooltip"),
+    goal: document.getElementById("goal"),
   };
 
   let playerInv = [];
@@ -46,6 +98,9 @@ try {
   let maxRolls = 10;
   let money = 0;
   let round = 1;
+  let goal = 50;
+  let diceMin = 1;
+  let diceMax = 6;
 
   console.log(Object.keys(items));
 
@@ -93,7 +148,7 @@ try {
       let earnMoney = 0;
       for (let num = 0; num < elems.dice.length; num++) {
         const die = elems.dice[num];
-        const roll = getRandomInt(1, 6);
+        const roll = getRandomInt(diceMin, diceMax);
         die.innerHTML = roll;
         earnMoney += roll;
       }
@@ -124,12 +179,23 @@ try {
         elems.roll.innerHTML = "New Round";
       }
     } else {
-      round += 1;
-      elems.round.innerHTML = round;
-      elems.roll.innerHTML = "Roll";
-      rolls = 0;
-      elems.nRolls.innerHTML = rolls;
-      newItem();
+      if (money > goal) {
+        money -= goal;
+        round += 1;
+        elems.round.innerHTML = round;
+        elems.roll.innerHTML = "Roll";
+        rolls = 0;
+        elems.nRolls.innerHTML = rolls;
+
+        let debtFactor = 1.3 + 0.1 * count(playerInv, "DebtDoubler");
+        diceMax = 6 + count(playerInv, "DebtDoubler");
+        goal = Math.floor(goal * debtFactor);
+        elems.goal.innerHTML = `$${goal}`;
+
+        newItem();
+      } else {
+        lose();
+      }
     }
   }
 
@@ -156,7 +222,7 @@ try {
       let newType = randProb(Object.keys(items), weights);
       element.setAttribute("type", newType);
       element.setAttribute("cost", cost);
-      element.src = items[newType].src;
+      element.src = `sprites/${items[newType].src}`;
       element.parentElement.children[1].innerHTML = `${newType} - <span style="color: lawngreen">$${cost}</span>`;
     }
   }
@@ -172,6 +238,7 @@ try {
     }
     maxRolls = count(playerInv, "DoubleRoll") + 10;
     elems.mRolls.innerHTML = maxRolls;
+    diceMax = 6 + count(playerInv, "DebtDoubler");
   }
 
   for (let i = 0; i < document.getElementsByClassName("item").length; i++) {
@@ -188,6 +255,7 @@ try {
   }
 
   // newItem();
+  elems.money.innerHTML = `$${money}`;
 } catch (error) {
   alert(error);
 }
