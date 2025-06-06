@@ -1,85 +1,68 @@
 try {
   const items = {
     PiggyBank: {
-      src: "piggyBank.png", 
-      desc: "Additional $5 per roll",
-      rarity: "Common"
+      src: "piggyBank.png",
+      desc: "Earns an additional $5 per roll",
+      rarity: "Common",
     },
     Bonus: {
-      src: "bonus.png", 
-      desc: "Additional $10 per roll",
-      rarity: "Common"
+      src: "bonus.png",
+      desc: "Earns an additional $10 per roll",
+      rarity: "Common",
     },
     Multiplier: {
       src: "mult.png",
-      desc: "Multiplies outcome by extra 0.1 per item",
-      rarity: "Rare"
+      desc: "Multiplies earnings by +0.1 per item",
+      rarity: "Rare",
     },
     DoubleRoll: {
       src: "double.png",
-      desc: "Gives an extra roll each turn",
-      rarity: "Rare"
+      desc: "Adds an extra die",
+      rarity: "Rare",
     },
     LuckyDie: {
       src: "lucky.png",
-      desc: "Randomly rolls a number between 6 and 12",
-      rarity: "Epic"
+      desc: "Random bonus between 6-12 each roll",
+      rarity: "Epic",
     },
     CashJackpot: {
       src: "jackpot.png",
-      desc: "Gives $50 bonus on next roll",
-      rarity: "Epic"
+      desc: "One-time $50 bonus",
+      rarity: "Epic",
     },
     GoldRush: {
       src: "goldrush.png",
-      desc: "Doubles total earnings once every 3 rounds",
-      rarity: "Legendary"
+      desc: "Doubles all cash every 3 rounds",
+      rarity: "Legendary",
     },
-    DebtDoubler: { // DO A SCALE
+    DebtDoubler: {
       src: "debt.png",
-      desc: "Increases the goal increase rate (hard mode) at a significant increase to wealth",
-      rarity: "Legendary"
+      desc: "Hard mode. Debt grows faster, but higher dice rolls",
+      rarity: "Legendary",
     },
-
-    // NEGATIVES
-
     TaxAudit: {
       src: "taxAudit.png",
-      desc: "Takes 20% of your money every round.",
-      rarity: "Rare"
+      desc: "Lose 20% of total earn each round, but 1% chance to get a tax refund.",
+      rarity: "Rare",
     },
     BadLuckDie: {
       src: "badLuckDie.png",
-      desc: "Subtracts a random number between 1 and 3 from your earnings each roll.",
-      rarity: "Rare"
+      desc: "Subtract 1-3 from every roll",
+      rarity: "Rare",
     },
     LoanShark: {
       src: "loanshark.png",
-      desc: "The loan shark demands his due. Half of every earning is taken.",
-      rarity: "Rare"
+      desc: "Increase total earn of rolls by 75%, but 25% chance to subtract 20% of total money.",
+      rarity: "Rare",
     },
     Inflation: {
       src: "inflation.png",
-      desc: "Everything’s getting more expensive. All new item costs increase by 50%.",
-      rarity: "epic"
+      desc: "New item costs increase by 50%",
+      rarity: "Epic",
     },
-
   };
 
-  const weights = [
-    15, // Piggybank
-    15, // Bonus
-    5,  // Multiplier
-    4,  // DoubleRoll
-    4,  // LuckyDie
-    2,  // CashJackpot
-    1,  // GoldRush
-    1,  // DebtDoubler
-    1,  // TaxAudit
-    1,  // BadLuckDie
-    1,  // LoanShark
-    1,  // Inflation
-  ];
+  const weights = [25, 20, 10, 10, 8, 4, 3, 2, 3, 3, 3, 2];
 
   const elems = {
     roll: document.getElementById("rollBtn"),
@@ -88,115 +71,172 @@ try {
     money: document.getElementById("money"),
     round: document.getElementById("round"),
     add: document.getElementById("add"),
-    dice: document.getElementsByClassName("die"),
+    diceContainer: document.querySelector(".dice"),
     tooltip: document.getElementById("tooltip"),
     goal: document.getElementById("goal"),
+    inventory: document.getElementById("inventory"),
   };
 
-  let playerInv = [];
-  let rolls = 0;
-  let maxRolls = 10;
-  let money = 0;
-  let round = 1;
+  let playerInv = [],
+    rolls = 0,
+    money = 0,
+    round = 1,
+    refund = 0;
+  let maxRolls = 5,
+    diceMin = 1,
+    diceMax = 6;
   let goal = 50;
-  let diceMin = 1;
-  let diceMax = 6;
-
-  console.log(Object.keys(items));
 
   function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   function randProb(items, weights) {
-    if (items.length !== weights.length) {
-      throw new Error("Items and weights arrays must have the same length.");
-    }
-
-    const cumulativeWeights = [];
-    let sum = 0;
-    for (const weight of weights) {
-      sum += weight;
-      cumulativeWeights.push(sum);
-    }
-
-    const randomNumber = Math.random() * sum;
-
-    for (let i = 0; i < cumulativeWeights.length; i++) {
-      if (cumulativeWeights[i] >= randomNumber) {
-        return items[i];
-      }
-    }
-    return null;
+    const cumulative = weights.map(
+      (
+        (sum) => (value) =>
+          (sum += value)
+      )(0)
+    );
+    const r = Math.random() * cumulative[cumulative.length - 1];
+    return Object.keys(items)[cumulative.findIndex((w) => w >= r)];
   }
 
   function count(list, item) {
-    let count = 0;
-    for (let i = 0; i < list.length; i++) {
-      const element = list[i];
-      if (element == item) {
-        count += 1;
-      }
+    return list.filter((i) => i === item).length;
+  }
+
+  function updateDiceVisuals() {
+    const totalDice = 6 + count(playerInv, "DoubleRoll");
+    elems.diceContainer.innerHTML = "";
+    for (let i = 0; i < totalDice; i++) {
+      const d = document.createElement("div");
+      d.className = "die";
+      d.innerText = "1";
+      elems.diceContainer.appendChild(d);
     }
-    return count;
+  }
+
+  function updateInventoryDisplay() {
+    elems.inventory.innerHTML = "";
+    for (const item of playerInv) {
+      const img = document.createElement("img");
+      img.src = `sprites/${items[item].src}`;
+      img.alt = item;
+      img.setAttribute("type", item);
+      img.title = `${item}\n${items[item].desc}`;
+      img.onmousemove = (e) => tooltip(item, e);
+      img.onmouseleave = () => (elems.tooltip.style.visibility = "hidden");
+      elems.inventory.appendChild(img);
+    }
+  }
+
+  function updateGoal() {
+    elems.goal.innerText = `$${goal}`;
   }
 
   function roll() {
+    const diceElems = document.querySelectorAll(".die");
     if (rolls < maxRolls) {
       let earnMoney = 0;
-      for (let num = 0; num < elems.dice.length; num++) {
-        const die = elems.dice[num];
-        const roll = getRandomInt(diceMin, diceMax);
-        die.innerHTML = roll;
-        earnMoney += roll;
-      }
-      rolls += 1;
+      diceElems.forEach((die) => {
+        const rollVal = getRandomInt(diceMin, diceMax);
+        die.innerText = rollVal;
+        earnMoney += rollVal;
+      });
 
-      // Items Traits
-      earnMoney += count(playerInv, "Bonus") * 10; // Bonus
-      earnMoney = (count(playerInv, "Multiplier") * 0.1 + 1) * earnMoney; // Multiplier
-      if (count(playerInv, "MoneyMultiplier") > 0) {
-        earnMoney *= 1.5; // Money Multiplier
-      }
-      if (count(playerInv, "LuckyDie") > 0) {
-        earnMoney += getRandomInt(6, 12); // Lucky Die
-      }
-      if (count(playerInv, "CashJackpot") > 0) {
-        earnMoney += 50; // Cash Jackpot
-        playerInv = playerInv.filter(item => item !== "CashJackpot"); // One-time use
-      }
+      rolls++;
+      earnMoney += count(playerInv, "Bonus") * 10;
+      earnMoney += count(playerInv, "PiggyBank") * 5;
+      earnMoney = (1 + 0.1 * count(playerInv, "Multiplier")) * earnMoney;
 
-      earnMoney = Math.floor(earnMoney * 100) / 100;
-      money += earnMoney;
-      money = Math.floor(money * 100) / 100;
-      elems.nRolls.innerHTML = rolls;
-      elems.money.innerHTML = `$${money}`;
-      elems.add.innerHTML = `+$${earnMoney}`;
-
-      if (rolls == maxRolls) {
-        elems.roll.innerHTML = "New Round";
+      if (count(playerInv, "LuckyDie")) {
+        const bonus = getRandomInt(6, 12);
+        earnMoney += bonus;
+        showFloating("Lucky +" + bonus);
       }
-    } else {
-      if (money > goal) {
-        money -= goal;
-        round += 1;
-        elems.round.innerHTML = round;
-        elems.roll.innerHTML = "Roll";
-        rolls = 0;
-        elems.nRolls.innerHTML = rolls;
-
-        let debtFactor = 1.3 + 0.1 * count(playerInv, "DebtDoubler");
-        diceMax = 6 + count(playerInv, "DebtDoubler");
-        goal = Math.floor(goal * debtFactor);
-        elems.goal.innerHTML = `$${goal}`;
-
-        newItem();
+      if (playerInv.includes("CashJackpot")) {
+        earnMoney += 50;
+        playerInv = playerInv.filter((i) => i !== "CashJackpot");
+        showFloating("Jackpot +50!");
+      }
+      
+      if (count(playerInv, "BadLuckDie")) earnMoney -= getRandomInt(1, 3)*diceElems.length;
+      
+      if (count(playerInv, "LoanShark")) {
+        if (Math.random() > 0.25) {
+          earnMoney *= 1.75;
+          earnMoney = Math.floor(earnMoney);
+        } else {
+          money += earnMoney;
+          money *= 0.8;
+        }
       } else {
-        lose();
+        earnMoney = Math.floor(earnMoney);
+        money += earnMoney;
+      }
+      if (Math.random() > (0.01*count(playerInv, "TaxAudit")) && count(playerInv, "TaxAudit") > 0) {
+        refund += money*.2;
+        money = Math.floor(money * 0.8);
+      } else if (count(playerInv, "TaxAudit") > 0) {
+        money = money + refund;
+        refund = 0;
+      }
+      money = Math.floor(money);
+      elems.nRolls.innerText = rolls;
+      elems.mRolls.innerText = maxRolls;
+      elems.money.innerText = `$${money}`;
+      elems.add.innerText = `+$${earnMoney}`;
+      updateInventoryDisplay();
+
+      if (rolls === maxRolls) elems.roll.innerText = "New Round";
+    } else {
+      if (money >= goal) {
+        money -= goal;
+        round++;
+        rolls = 0;
+        diceMax = 6 + count(playerInv, "DebtDoubler");
+
+        let increaseFactor = 1.3 + 0.1 * count(playerInv, "DebtDoubler");
+        goal = Math.floor(goal * increaseFactor);
+        updateGoal();
+
+        if (count(playerInv, "GoldRush") && round % 3 === 0) {
+          money *= 2;
+          showFloating("GOLD RUSH! 2X Money!", "gold");
+        }
+
+        elems.roll.innerText = "Roll";
+        elems.round.innerText = round;
+        elems.nRolls.innerText = rolls;
+        elems.mRolls.innerText = maxRolls;
+        elems.money.innerText = `$${money}`;
+        elems.add.innerText = "";
+        newItem();
+        updateDiceVisuals();
+      } else {
+        alert("You didn't reach the goal and lost!");
+        location.reload();
       }
     }
+  }
+
+  function showFloating(text, color = "lawngreen") {
+    const float = document.createElement("div");
+    float.innerText = text;
+    Object.assign(float.style, {
+      position: "absolute",
+      top: "20%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: color,
+      color: "black",
+      padding: "1rem",
+      borderRadius: "1rem",
+      zIndex: 1000,
+    });
+    document.body.appendChild(float);
+    setTimeout(() => float.remove(), 2000);
   }
 
   function tooltip(type, evt) {
@@ -207,23 +247,38 @@ try {
   }
 
   function skipItem() {
-    money -= Math.floor(money*0.5);
+    money = Math.floor(money * 0.5);
     document.getElementById("newItem").style.visibility = "hidden";
   }
 
   function newItem() {
-    // Gradual cost increase based on items already owned
-    let cost = Math.floor(15 + Math.log(playerInv.length + 1) * 10);
+    const baseCost = Math.floor(15 + Math.log(playerInv.length + 1) * 10);
+
+    // Define cost multipliers per rarity
+    const rarityMultipliers = {
+      Common: 1,
+      Rare: 1.5,
+      Epic: 2.5,
+      Legendary: 4,
+    };
+
     document.getElementById("newItem").style.visibility = "visible";
-    document.getElementById("skipCost").innerHTML = `Skip $${money/2}`;
-    
-    for (let i = 0; i < document.getElementsByClassName("item").length; i++) {
-      const element = document.getElementsByClassName("item")[i];
-      let newType = randProb(Object.keys(items), weights);
-      element.setAttribute("type", newType);
-      element.setAttribute("cost", cost);
-      element.src = `sprites/${items[newType].src}`;
-      element.parentElement.children[1].innerHTML = `${newType} - <span style="color: lawngreen">$${cost}</span>`;
+    document.getElementById("skipCost").innerHTML = `Skip $${Math.floor(
+      money / 2
+    )}`;
+
+    const picks = document.getElementsByClassName("item");
+    for (let i = 0; i < picks.length; i++) {
+      const elem = picks[i];
+      const newType = randProb(items, weights);
+
+      const rarity = items[newType].rarity || "Common";
+      const cost = Math.floor(baseCost * (rarityMultipliers[rarity] || 1));
+
+      elem.setAttribute("type", newType);
+      elem.setAttribute("cost", cost);
+      elem.src = `sprites/${items[newType].src}`;
+      elem.parentElement.children[1].innerHTML = `${newType} - <span style='color: lawngreen'>$${cost}</span>`;
     }
   }
 
@@ -233,29 +288,25 @@ try {
       elems.money.innerHTML = `$${money}`;
       document.getElementById("newItem").style.visibility = "hidden";
       playerInv.push(type);
-      console.log(playerInv);
-      document.getElementById('inventory').innerHTML += `<img src="${items[type].src}" alt="${type}" type=${type}>`;
+      updateInventoryDisplay();
     }
-    maxRolls = count(playerInv, "DoubleRoll") + 10;
-    elems.mRolls.innerHTML = maxRolls;
+
     diceMax = 6 + count(playerInv, "DebtDoubler");
+    updateDiceVisuals();
   }
 
-  for (let i = 0; i < document.getElementsByClassName("item").length; i++) {
-    const elem = document.getElementsByClassName("item")[i];
-    elem.onmousemove = function (event) {
-      tooltip(this.getAttribute("type"), event);
-    };
-    elem.onmouseleave = function () {
-      elems.tooltip.style.visibility = "hidden";
-    };
-    elem.onmousedown = function () {
-      giveItem(this.getAttribute("type"), this.getAttribute("cost"));
-    };
-  }
+  document.querySelectorAll(".item").forEach((elem) => {
+    elem.onmousemove = (e) => tooltip(elem.getAttribute("type"), e);
+    elem.onmouseleave = () => (elems.tooltip.style.visibility = "hidden");
+    elem.onclick = () =>
+      giveItem(elem.getAttribute("type"), elem.getAttribute("cost"));
+  });
 
-  // newItem();
-  elems.money.innerHTML = `$${money}`;
-} catch (error) {
-  alert(error);
+  updateDiceVisuals();
+  updateInventoryDisplay();
+  updateGoal();
+  elems.mRolls.innerText = maxRolls;
+  elems.money.innerText = `$${money}`;
+} catch (e) {
+  alert(e);
 }

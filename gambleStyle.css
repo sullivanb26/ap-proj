@@ -16,34 +16,25 @@ body {
 * {
   font-family: Soda;
 }
+
 img {
   image-rendering: pixelated;
 }
 
 #mainContent {
-  /* text-align: center; */
-  /* left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%); */
   position: absolute;
   left: 0;
   top: 0;
   width: 100vw;
   height: 100vh;
-  overflow: none;
   background-color: var(--bgColor);
-  /* border: 3px solid darkslategray;  */
-  /* padding: 2rem 1rem 1rem 1rem; */
-  /* border-radius: 1rem; */
   display: grid;
   grid-template-columns: calc(100vw / 7 * 2) calc(100vw / 7 * 5);
 }
 
 #sidebar {
   background-color: var(--primColor);
-  /* width: 100%; */
   width: calc(100vw / 7 * 2 - 1rem);
-  /* outline: 1px solid red; */
   overflow: hidden;
   padding: 0.5rem;
   display: flex;
@@ -52,11 +43,9 @@ img {
 
 #info {
   color: white;
-  /* border-bottom: 1px solid white; */
 }
 
 .iCont {
-  /* outline:1px solid darkslategrey; */
   background-color: var(--secColor);
   width: calc(100% - 1rem);
   height: 3rem;
@@ -74,6 +63,7 @@ img {
 .soda {
   font-family: Soda;
 }
+
 .VCR {
   font-family: VCR;
 }
@@ -96,12 +86,12 @@ img {
 .mleft {
   margin: 0 0 0 1rem;
 }
+
 .mboth {
   margin: 0 0.2rem 0 0.2rem;
 }
 
 .bgSub {
-  /* margin: 0 1rem; */
   width: 100%;
   height: 100%;
   text-align: center;
@@ -121,30 +111,23 @@ img {
   display: grid;
   justify-content: space-evenly;
   align-self: center;
-  /* outline: 1px solid blue; */
   grid-template-columns: repeat(auto-fill, 3.2rem);
   gap: 0.2rem;
   overflow-y: scroll;
-  /* height: calc(100% - 1.6rem); */
   max-height: calc(100% - 1.5rem);
 }
 
 ::-webkit-scrollbar {
-    width: 0.5rem;
+  width: 0.5rem;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-    /* -webkit-border-radius: 10px; */
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
-/* Handle */
 ::-webkit-scrollbar-thumb {
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background: var(--secColor); 
-    /* -webkit-box-shadow: 0 0.2rem 0 var(--dropColor);  */
+  border-radius: 10px;
+  background: var(--secColor);
 }
 
 #inventory > * {
@@ -155,13 +138,25 @@ img {
 
 #game {
   width: 100%;
-  /* background-color: blue; */
   overflow: hidden;
   width: calc(100vw / 7 * 5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  gap: 2rem;
 }
 
 .dice {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  background-color: var(--primColor);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0.5rem var(--dropColor);
 }
 
 .die {
@@ -169,9 +164,29 @@ img {
   width: 5rem;
   text-align: center;
   line-height: 5rem;
-  border: 1px solid black;
+  border: 2px solid black;
   border-radius: 0.5rem;
   background-color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  box-shadow: 0 0.3rem 0.3rem rgba(0, 0, 0, 0.3);
+}
+
+#rollBtn {
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  font-family: Soda;
+  background-color: goldenrod;
+  color: black;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  box-shadow: 0 0.4rem 0.4rem rgba(0, 0, 0, 0.3);
+  transition: background-color 0.2s ease;
+}
+
+#rollBtn:hover {
+  background-color: orange;
 }
 
 #newItem {
