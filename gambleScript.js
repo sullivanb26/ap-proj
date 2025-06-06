@@ -211,7 +211,7 @@ try {
         elems.nRolls.innerText = rolls;
         elems.mRolls.innerText = maxRolls;
         elems.money.innerText = `$${money}`;
-        elems.add.innerText = "";
+        elems.add.innerText = "+$0";
         newItem();
         updateDiceVisuals();
       } else {

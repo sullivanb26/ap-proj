@@ -256,10 +256,10 @@ img {
 
 @font-face {
   font-family: Soda;
-  src: url(GrapeSoda.ttf);
+  src: url(fonts/GrapeSoda.ttf);
 }
 
 @font-face {
   font-family: VCR;
-  src: url(VCR.ttf);
+  src: url(fonts/VCR.ttf);
 }

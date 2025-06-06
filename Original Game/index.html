@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Puzzle!</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="cursor" style="position: absolute; left: 0; top: 0">
+      <img src="pencil.png" alt="pencil" />
+    </div>
+    <canvas
+      id="myCanvas"
+      style="border: 1px solid black; width: 320px; height: 360px"
+      width="320"
+      height="360"
+    ></canvas>
+    <script>
+      function log(text) {
+        console.log(text);
+      }
+      var topLayer = [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      ];
+      var midLayer = [
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 2, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 4, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      ];
+      var bgLayer = [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+      ];
+      var definition = {
+        0: "rgba(0, 0, 0, 0)", // air
+        1: "green", // grass
+        2: "gray", // wall
+        3: "red", // item
+        4: "purple", // door locked
+        5: "pink" // door unlocked
+      };
+      var nameDefinition = {
+        99: "oob", // outofbounds
+        0: "air",
+        1: "grass",
+        2: "wall",
+        3: "item",
+        4: "door",
+        5: "undoor",
+      };
+      var collisionList = ["wall", "item", "door", "oob"];
+      const canvas = document.getElementById("myCanvas");
+      const rect = canvas.getBoundingClientRect();
+      const ctx = canvas.getContext("2d");
+      const sizeRowCol = 16;
+      const width = 320;
+      const height = 320;
+      const boxSize = width / sizeRowCol;
+      var mousePos = { x: 0, y: 0 };
+      var modMousePos = [mousePos.x - rect.left, mousePos.y - rect.top];
+      var gridMousePos = [-1, -1];
+      var selectedColor = 2;
+      var selectedTool = "pencil";
+      var selectedLayer = 2;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      var collectables = [
+        { name: "key", pos: { x: 7, y: 6 } },
+        // ['name', x, y, isPickupAble?]
+      ];
+      var playerObj = {
+        health: 100,
+        pos: { x: 11, y: 6 },
+        rotation: "north",
+        heldItem: null,
+      };
+      function getGridPos() {
+        posX = gridMousePos[0];
+        posY = gridMousePos[1];
+        if (
+          modMousePos[0] < 0 ||
+          modMousePos[0] > 320 ||
+          modMousePos[1] < 0 ||
+          modMousePos[1] > 320
+        ) {
+          return [-1, -1];
+        }
+        for (let col = 0; col < sizeRowCol; col++) {
+          if (col * 20 <= modMousePos[0] && modMousePos[0] <= (col + 1) * 20) {
+            posX = col + 1;
+          }
+        }
+        for (let row = 0; row < sizeRowCol; row++) {
+          if (row * 20 <= modMousePos[1] && modMousePos[1] <= (row + 1) * 20) {
+            posY = row + 1;
+          }
+        }
+        return [posX - 1, posY - 1];
+      }
+      function drawText(text, x, y) {
+        ctx.fillText(text, x, y);
+      }
+      function drawLine(x1, y1, x2, y2, lWidth = 1) {
+        ctx.lineWidth = lWidth;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      function drawRect(x1, y1, x2, y2, color = null) {
+        ctx.beginPath();
+        ctx.rect(x1, y1, x2 - x1, y2 - y1);
+        if (color != null) {
+          var tempfill = ctx.fillStyle;
+          ctx.fillStyle = color;
+          ctx.fill();
+          ctx.fillStyle = tempfill;
+        }
+        ctx.stroke();
+      }
+      function drawRectSize(x1, y1, x2, y2, color = null) {
+        ctx.beginPath();
+        ctx.rect(x1, y1, x2, y2);
+        if (color != null) {
+          var tempfill = ctx.fillStyle;
+          ctx.fillStyle = color;
+          ctx.fill();
+          ctx.fillStyle = tempfill;
+        }
+        ctx.stroke();
+      }
+      function drawRectGrid(x, y, color = null) {
+        ctx.beginPath();
+        ctx.rect(x * 20 - 20, y * 20 - 20, 20, 20);
+        if (color != null) {
+          var tempfill = ctx.fillStyle;
+          ctx.fillStyle = color;
+          ctx.fill();
+          ctx.fillStyle = tempfill;
+        }
+        ctx.stroke();
+      }
+
+      function drawLayer(layer) {
+        for (let row = 0; row < layer.length; row++) {
+          for (let col = 0; col < layer[row].length; col++) {
+            drawRectGrid(col + 1, row + 1, definition[layer[row][col]]);
+            // console.log(definition[layer[row][col]]);
+          }
+        }
+      }
+
+      function loadLevel() {
+        drawRectSize(0, 0, 320, 320, "white");
+        drawLayer(bgLayer);
+        drawLayer(midLayer);
+        drawLayer(topLayer);
+      }
+      function getPosInDir(direction) {
+        let pos = { x: playerObj.pos.x, y: playerObj.pos.y };
+        switch (direction) {
+          case "north":
+            pos.y -= 1;
+            break;
+          case "south":
+            pos.y += 1;
+            break;
+          case "east":
+            pos.x += 1;
+            break;
+          case "west":
+            pos.x -= 1;
+            break;
+        }
+        return pos;
+      }
+      function getGridInDir(direction) {
+        let pos = getPosInDir(direction);
+        if (
+          pos.x >= 0 &&
+          pos.x < sizeRowCol &&
+          pos.y >= 0 &&
+          pos.y < sizeRowCol
+        ) {
+          return midLayer[pos.y][pos.x];
+        }
+        return 99;
+      }
+      function grabItem(direction) {
+        if (getGridInDir(direction) == 3) {
+          posOf = getPosInDir(direction);
+          if (!((posOf.x == -1) | (posOf.y == -1))) {
+            collectables.forEach((item) => {
+              if (item.pos.x === posOf.x && item.pos.y === posOf.y) {
+                playerObj.heldItem = item;
+                item.pos = { x: -1, y: -1 };
+                midLayer[posOf.y][posOf.x] = 0;
+                collectables.pop(item);
+              }
+            });
+          }
+        }
+      }
+
+      function dropItem() {
+        log(collectables);
+        if (playerObj.heldItem) {
+          let pos = getPosInDir(playerObj.rotation);
+          if (midLayer[pos.y][pos.x] == 0) {
+            collectables.push({
+              name: playerObj.heldItem.name,
+              pos: { x: pos.x, y: pos.y },
+            });
+            playerObj.heldItem = null;
+            midLayer[pos.y][pos.x] = 3;
+          }
+        }
+      }
+      function canMove(direction) {
+        return !collisionList.includes(nameDefinition[getGridInDir(direction)]);
+      }
+
+      function drawPlayer(player) {
+        const px = player.pos.x * 20;
+        const py = player.pos.y * 20;
+
+        drawRectSize(px, py, 20, 20, "yellow");
+
+        let arrow = "↑";
+        switch (player.rotation) {
+          case "north":
+            arrow = "↑";
+            break;
+          case "east":
+            arrow = "→";
+            break;
+          case "south":
+            arrow = "↓";
+            break;
+          case "west":
+            arrow = "←";
+            break;
+        }
+
+        drawText(arrow, px + 10, py + 10);
+      }
+
+      for (let size = 0; size < sizeRowCol; size++) {
+        pos = (size + 1) * (height / (sizeRowCol + 1));
+        drawLine(0, pos, 320, pos);
+        drawLine(pos, 0, pos, 320);
+      }
+
+      document.addEventListener("mousemove", (event) => {
+        // console.log('Mouse position (clientX, clientY):', event.clientX, event.clientY);
+        // console.log('Mouse position (screenX, screenY):', event.screenX, event.screenY);
+        // console.log('Mouse position (pageX, pageY):', event.pageX, event.pageY);
+        mousePos.x = event.clientX;
+        mousePos.y = event.clientY;
+        modMousePos = [mousePos.x - rect.left, mousePos.y - rect.top];
+        gridMousePos = getGridPos();
+        document.getElementById("cursor").style.left = mousePos.x + "px";
+        document.getElementById("cursor").style.top = mousePos.y + "px";
+      });
+
+      document.addEventListener("mousedown", (event) => {
+        if (modMousePos[1] >= 320) {
+          if (modMousePos[0] > 40 && modMousePos[0] < 80) {
+            selectedTool = "cursor";
+          } else if (modMousePos[0] > 80 && modMousePos[0] < 120) {
+            selectedTool = "pencil";
+          } else if (modMousePos[0] > 120 && modMousePos[0] < 160) {
+            selectedTool = "dropper";
+          } else if (
+            modMousePos[0] > 240 &&
+            modMousePos[0] < 280 &&
+            modMousePos[1] < 340
+          ) {
+            selectedLayer += 1;
+          } else if (
+            modMousePos[0] > 240 &&
+            modMousePos[0] < 280 &&
+            modMousePos[1] > 340 &&
+            modMousePos[1] < 360
+          ) {
+            selectedLayer -= 1;
+          }
+        } else if (gridMousePos[0] != -1 || gridMousePos[1] != -1) {
+          switch (selectedTool) {
+            case "pencil":
+              switch (selectedLayer) {
+                case 1:
+                  bgLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+                  break;
+                case 2:
+                  midLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+                  break;
+                case 3:
+                  topLayer[gridMousePos[1]][gridMousePos[0]] = selectedColor;
+                  break;
+
+                default:
+                  console.log("idk what happened lil bro");
+                  break;
+              }
+              loadLevel();
+              console.clear();
+              console.log("bgLayer:");
+              console.log(bgLayer);
+              console.log("midLayer:");
+              console.log(midLayer);
+              console.log("topLayer:");
+              console.log(topLayer);
+              break;
+            case "dropper":
+              switch (selectedLayer) {
+                case 1:
+                  selectedColor = bgLayer[gridMousePos[1]][gridMousePos[0]];
+                  break;
+                case 2:
+                  selectedColor = midLayer[gridMousePos[1]][gridMousePos[0]];
+                  break;
+                case 3:
+                  selectedColor = topLayer[gridMousePos[1]][gridMousePos[0]];
+                  break;
+
+                default:
+                  console.log("idk what happened lil bro??");
+                  break;
+              }
+              break;
+            case "cursor":
+              break;
+
+            default:
+              selectedTool = "cursor";
+              break;
+          }
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        // console.log('key, ' + event.key + ' pressed');
+        switch (event.key) {
+          case "w":
+            playerObj.rotation = "north";
+            if (canMove("north")) {
+              // console.log('move up');
+              playerObj.pos.y -= 1;
+            }
+            break;
+          case "a":
+            playerObj.rotation = "west";
+            if (canMove("west")) {
+              // console.log('move west');
+              playerObj.pos.x -= 1;
+            }
+            break;
+          case "s":
+            playerObj.rotation = "south";
+            if (canMove("south")) {
+              // console.log('move south');
+              playerObj.pos.y += 1;
+            }
+            break;
+          case "d":
+            playerObj.rotation = "east";
+            if (canMove("east")) {
+              // console.log('move east');
+              playerObj.pos.x += 1;
+            }
+            break;
+          case "e":
+            if (playerObj.heldItem == null) {
+              grabItem(playerObj.rotation);  
+            } else if (getGridInDir(playerObj.rotation) == 4 && playerObj.heldItem.name == 'key') {
+              playerObj.heldItem = null;
+              let pos = getPosInDir(playerObj.rotation);
+              midLayer[pos.y][pos.x] = 5;
+            }
+            
+            break;
+          case "q":
+            dropItem();
+            break;
+          default:
+            break;
+        }
+      });
+      // Toolbar
+      drawRectSize(40, 320, 40, 40, "#ffffff");
+      drawText("cursor", 60, 340);
+
+      drawRectSize(80, 320, 40, 40, "#ffffff");
+      drawText("pencil", 100, 340);
+
+      drawRectSize(120, 320, 40, 40, "#ffffff");
+      drawText("dropper", 140, 340);
+
+      drawRectSize(240, 320, 40, 20);
+      drawText("up", 260, 330);
+      drawRectSize(240, 340, 40, 20);
+      drawText("down", 260, 350);
+
+      setInterval((evt) => {
+        drawRectSize(0, 320, 40, 20, "#ffffff");
+        drawText(modMousePos[0] + ", " + modMousePos[1], 20, 330);
+        drawRectSize(0, 340, 40, 20, "#ffffff");
+        drawText(gridMousePos[0] + ", " + gridMousePos[1], 20, 350);
+        drawRectSize(160, 320, 40, 40, "#ffffff");
+        drawRectSize(170, 330, 20, 20, definition[selectedColor]);
+        drawRectSize(200, 320, 40, 20, "#ffffff");
+        drawText(selectedTool, 220, 330);
+        drawRectSize(200, 340, 40, 20, "#ffffff");
+        drawText(selectedColor + " - " + selectedLayer.toString(), 220, 350);
+        // switch (selectedLayer) {
+        //   case 1:
+        //     drawLayer(bgLayer);
+        //     break;
+        //   case 2:
+        //     drawLayer(midLayer);
+        //     break;
+        //   case 3:
+        //     drawLayer(topLayer);
+        //     break;
+
+        //   default:
+        //     console.log("layer out of range");
+        //     break;
+        // }
+        loadLevel();
+        drawRectSize(280, 320, 40, 20, "#ffffff");
+        if (playerObj.heldItem != null) {
+          drawText(playerObj.heldItem.name, 300, 330);
+        } else {
+          drawText("None", 300, 330);
+        }
+        drawRectSize(280, 340, 40, 20, "#ffffff");
+        // drawText(playerObj.heldItem, 300, 350);
+        drawPlayer(playerObj);
+      }, 10);
+      // loadLevel();
+      /* Shoutout Zena Girhotra */
+    </script>
+  </body>
+</html>
