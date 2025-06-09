@@ -1,7 +1,7 @@
 try {
   const items = {
     PiggyBank: {
-      src: "piggyBank.png",
+      src: "piggybank.png",
       desc: "Earns an additional $5 per roll",
       rarity: "Common",
     },
